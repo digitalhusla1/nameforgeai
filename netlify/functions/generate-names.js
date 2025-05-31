@@ -120,8 +120,7 @@ async function callGeminiAPI(description, requestId = null, clickCount = 1, perf
         'groundbreaking creative vision'
     ];
     const clickVariation = clickVariations[(clickCount - 1) % clickVariations.length];
-    
-    // Add random business context elements
+      // Create variations for business context
     const businessContexts = [
         'with strong market appeal',
         'that stands out from competitors',
@@ -131,71 +130,70 @@ async function callGeminiAPI(description, requestId = null, clickCount = 1, perf
         'that suggests growth and success',
         'with memorable brand identity',
         'that conveys trust and reliability'
-    ];    const businessContext = businessContexts[(randomSeed + microSeed) % businessContexts.length];
-    
-    // Create keyword-focused variations
-    const keywordIntegrations = [
-        `that prominently features the concept of "${keywordData.primary}"`,
-        `that creatively incorporates "${keywordData.primary}" in the name`,
-        `that reflects the essence of "${keywordData.primary}" business`,
-        `that cleverly plays with "${keywordData.primary}" terminology`,
-        `that suggests expertise in "${keywordData.primary}" industry`,
-        `that evokes the spirit of "${keywordData.primary}" culture`,
-        `that modernizes the "${keywordData.primary}" experience`,
-        `that represents innovation in "${keywordData.primary}" sector`
     ];
-    const keywordIntegration = keywordIntegrations[(randomSeed + clickCount) % keywordIntegrations.length];
-      const prompt = `Generate AT LEAST 10 simple, clear, and readable business names for: "${description}" ${businessContext} ${keywordIntegration}.
+    const businessContext = businessContexts[(randomSeed + microSeed) % businessContexts.length];    const prompt = `Generate exactly 10 creative, meaningful business names for: "${description}" ${businessContext}.
 
-CRITICAL KEYWORD REQUIREMENTS:
-- Primary keyword: "${keywordData.primary}" - MUST be the foundation of ALL business names
-- Names should be SIMPLE, CLEAR, and EASY TO UNDERSTAND
-- Avoid complicated, abstract, or hard-to-pronounce names
-- Focus on straightforward combinations that clearly relate to "${keywordData.primary}"
-- Each name should immediately convey what the business does
+CRITICAL NAMING REQUIREMENTS:
+- Primary keyword: "${keywordData.primary}" - Create names that are MEANINGFULLY CONNECTED to this keyword
+- Generate a BALANCED MIX of direct and creative names that all relate to "${keywordData.primary}"
+- ALL names must have a clear connection to the "${keywordData.primary}" industry/concept
+- Create names that customers will immediately understand relate to this business type
 
-SIMPLICITY GUIDELINES:
-- Use common, everyday words that people can easily read and remember
-- Keep names between 1-3 words maximum
-- Avoid complex wordplay, made-up words, or abstract concepts
-- Choose names that customers can easily spell and pronounce
-- Ensure the connection to "${keywordData.primary}" is obvious and direct
+NAMING STRATEGY - Generate a balanced mix of:
+1. DIRECT NAMES (3-4 names): Modern, sophisticated names that clearly connect to "${keywordData.primary}"
+   - Use elegant variations of the keyword or related industry terms
+   - Examples: For "coffee" → "Roastery", "Bean & Co", "Brew House"
+   - Examples: For "jewelry" → "Gem Studio", "Silver & Stone", "Precious Works"
+   - Examples: For "tech" → "Code Lab", "Digital Core", "Tech Studio"
+   - Examples: For "fitness" → "Strength Lab", "Fit Studio", "Performance Center"
+   
+2. CREATIVE CONCEPTUAL NAMES (6-7 names): Poetic names inspired by "${keywordData.primary}" essence
+   - Use metaphors, emotions, and symbolism related to "${keywordData.primary}"
+   - Examples: For "coffee" → "Morning Ritual", "Ember", "Awakening"
+   - Examples: For "jewelry" → "Radiance", "Eternal Sparkle", "Crystal Dreams"
+   - Examples: For "tech" → "Nexus", "Velocity", "Quantum Leap"
+   - Examples: For "fitness" → "Forge", "Ignite", "Ascend"
 
-NAMING APPROACHES (use variety but keep simple):
-1. "${keywordData.primary}" + descriptive word (e.g., "Coffee House", "Fresh Coffee")
-2. Location + "${keywordData.primary}" (e.g., "Downtown Coffee", "Corner Coffee")
-3. Quality + "${keywordData.primary}" (e.g., "Premium Coffee", "Pure Coffee")
-4. Action + "${keywordData.primary}" (e.g., "Brew Coffee", "Roast Coffee")
-5. Time/Experience + "${keywordData.primary}" (e.g., "Daily Coffee", "Morning Coffee")
-6. Simple compound names (e.g., "CoffeeSpot", "CoffeePlus")
+CREATIVE APPROACHES FOR "${keywordData.primary}":
+1. Emotional Connection: What feelings does "${keywordData.primary}" evoke?
+2. Natural Elements: What in nature reflects "${keywordData.primary}"?
+3. Transformation Words: How does "${keywordData.primary}" change people?
+4. Abstract Concepts: What deeper ideas relate to "${keywordData.primary}"?
+5. Sensory Words: What senses does "${keywordData.primary}" engage?
+6. Industry Evolution: Modern takes on traditional "${keywordData.primary}" concepts
 
-CRITICAL UNIQUENESS REQUIREMENTS:
+QUALITY REQUIREMENTS:
+- Names should be 1-3 words maximum, elegant and professional
+- Each name must be brandable, memorable, and unique
+- Names should sound premium and trustworthy
+- All names must have clear relevance to "${keywordData.primary}" business
 - This is generation attempt #${clickCount} for this user
-- Use ${clickVariation} compared to any previous suggestions  
-- Each name must be completely unique and never been suggested before
-- Generate AT LEAST 10 different name suggestions
-- ENSURE each name clearly connects to the "${keywordData.primary}" business
+- Use ${clickVariation} compared to any previous suggestions
 
 Context: ${timeContext} and ${dayContext} creativity session
 Request ID: ${requestIdentifier}
 Performance Marker: ${performanceNow}
 Random Seeds: ${randomSeed}-${microSeed}
 
-For each name, provide a short, engaging description (1-2 sentences) that explains the reasoning behind the name and captures the essence of a business with that name.
+For each name, provide a compelling description (2-3 sentences) that explains:
+- HOW the name connects to the "${keywordData.primary}" business
+- WHY it would appeal to customers
+- For DIRECT names: Emphasize industry relevance and professional appeal
+- For CREATIVE names: Emphasize emotional connection and brand personality
 
 Please format your response exactly like this:
-1. BusinessName - Brief explanation of why this name works
-2. AnotherName - Brief explanation of why this name works  
-3. ThirdName - Brief explanation of why this name works
-4. FourthName - Brief explanation of why this name works
-5. FifthName - Brief explanation of why this name works
-6. SixthName - Brief explanation of why this name works
-7. SeventhName - Brief explanation of why this name works
-8. EighthName - Brief explanation of why this name works
-9. NinthName - Brief explanation of why this name works
-10. TenthName - Brief explanation of why this name works
+1. BusinessName - Explanation of connection to ${keywordData.primary} business and customer appeal
+2. AnotherName - Explanation of connection to ${keywordData.primary} business and customer appeal
+3. ThirdName - Explanation of connection to ${keywordData.primary} business and customer appeal
+4. FourthName - Explanation of connection to ${keywordData.primary} business and customer appeal
+5. FifthName - Explanation of connection to ${keywordData.primary} business and customer appeal
+6. SixthName - Explanation of connection to ${keywordData.primary} business and customer appeal
+7. SeventhName - Explanation of connection to ${keywordData.primary} business and customer appeal
+8. EighthName - Explanation of connection to ${keywordData.primary} business and customer appeal
+9. NinthName - Explanation of connection to ${keywordData.primary} business and customer appeal
+10. TenthName - Deep explanation of the meaning and emotional connection
 
-Make sure ALL names are simple, memorable, relevant, professional, and easy to pronounce. Ensure strong connection to "${keywordData.primary}" business.`;
+Ensure the mix includes both direct industry-connected names AND creative conceptual names, with ALL names maintaining meaningful relevance to "${keywordData.primary}".`;
 
     const requestBody = {
         contents: [{
@@ -304,126 +302,169 @@ function generateFallbackNames(description, requestId = null) {
     console.log(`🔍 Fallback using keywords:`, keywordData);
     
     const primaryKeyword = keywordData.primary;
-    const secondaryKeyword = keywordData.secondary;
-      // Simple keyword-focused words based on industry
-    const getSimpleWords = (keyword) => {
+    const secondaryKeyword = keywordData.secondary;    // Creative word banks that evoke the essence of different industries
+    const getCreativeWords = (keyword) => {
         const industryMaps = {
             coffee: {
-                descriptors: ['Fresh', 'Daily', 'Morning', 'Premium', 'Local', 'Pure', 'Best'],
-                locations: ['Corner', 'Downtown', 'Central', 'Main', 'Street'],
-                simple: ['House', 'Shop', 'Spot', 'Place', 'Co']
+                direct: ['Roastery', 'Bean Co', 'Brew House', 'Coffee Works', 'Grind Studio', 'Café Central', 'Roast & Co'],
+                emotions: ['Ember', 'Dawn', 'Spark', 'Glow', 'Warmth', 'Comfort', 'Ritual'],
+                nature: ['Bean', 'Roast', 'Steam', 'Aroma', 'Grove', 'Harvest', 'Origin'],
+                experiences: ['Morning', 'Awaken', 'Gather', 'Social', 'Pause', 'Moment', 'Connect'],
+                abstract: ['Essence', 'Craft', 'Culture', 'Tradition', 'Art', 'Journey', 'Story']
+            },
+            jewelry: {
+                direct: ['Gem Studio', 'Silver & Stone', 'Precious Works', 'Jewel Craft', 'Gold & Grace', 'Crystal Co', 'Fine Jewelry'],
+                emotions: ['Radiance', 'Elegance', 'Grace', 'Allure', 'Brilliance', 'Charm', 'Mystique'],
+                nature: ['Crystal', 'Pearl', 'Gold', 'Silver', 'Stone', 'Gem', 'Mineral'],
+                experiences: ['Adorn', 'Celebrate', 'Honor', 'Cherish', 'Treasure', 'Memory', 'Gift'],
+                abstract: ['Legacy', 'Heritage', 'Artistry', 'Vision', 'Beauty', 'Wonder', 'Magic']
             },
             tech: {
-                descriptors: ['Smart', 'Digital', 'Pro', 'Quick', 'Modern', 'Easy', 'Simple'],
-                locations: ['Hub', 'Center', 'Lab', 'Studio'],
-                simple: ['Solutions', 'Systems', 'Works', 'Group', 'Plus']
-            },
-            consulting: {
-                descriptors: ['Expert', 'Pro', 'Prime', 'Best', 'Top', 'Smart', 'Trusted'],
-                locations: ['Group', 'Partners', 'Associates'],
-                simple: ['Advisors', 'Solutions', 'Services', 'Help', 'Plus']
+                direct: ['Tech Solutions', 'Code Studio', 'Digital Works', 'Tech Labs', 'Innovation Hub', 'Software Co', 'Data Systems'],
+                emotions: ['Innovation', 'Progress', 'Discovery', 'Wonder', 'Curiosity', 'Ambition', 'Vision'],
+                nature: ['Circuit', 'Code', 'Data', 'Logic', 'Network', 'System', 'Platform'],
+                experiences: ['Connect', 'Create', 'Build', 'Transform', 'Evolve', 'Advance', 'Explore'],
+                abstract: ['Future', 'Digital', 'Virtual', 'Intelligence', 'Algorithm', 'Innovation', 'Solution']
             },
             fitness: {
-                descriptors: ['Strong', 'Fit', 'Active', 'Peak', 'Pro', 'Elite', 'Pure'],
-                locations: ['Studio', 'Center', 'Zone', 'Club'],
-                simple: ['Gym', 'Training', 'Health', 'Plus', 'Works']
+                direct: ['Fitness Studio', 'Gym Works', 'Training Center', 'Fitness Co', 'Workout Hub', 'Health Club', 'Fit Studio'],
+                emotions: ['Strength', 'Power', 'Energy', 'Vitality', 'Confidence', 'Determination', 'Spirit'],
+                nature: ['Core', 'Peak', 'Summit', 'Flow', 'Balance', 'Rhythm', 'Motion'],
+                experiences: ['Transform', 'Achieve', 'Overcome', 'Push', 'Strive', 'Excel', 'Triumph'],
+                abstract: ['Journey', 'Challenge', 'Goal', 'Progress', 'Discipline', 'Focus', 'Mindset']
+            },
+            consulting: {
+                direct: ['Consulting Group', 'Advisory Partners', 'Strategy Co', 'Business Solutions', 'Consulting Works', 'Expert Partners', 'Advisory Group'],
+                emotions: ['Wisdom', 'Trust', 'Insight', 'Clarity', 'Confidence', 'Authority', 'Expertise'],
+                nature: ['Path', 'Bridge', 'Foundation', 'Compass', 'Guide', 'Direction', 'Strategy'],
+                experiences: ['Guide', 'Lead', 'Advise', 'Navigate', 'Transform', 'Empower', 'Enable'],
+                abstract: ['Vision', 'Strategy', 'Solution', 'Knowledge', 'Method', 'Approach', 'Framework']
             },
             food: {
-                descriptors: ['Fresh', 'Pure', 'Local', 'Best', 'Daily', 'Good', 'Fine'],
-                locations: ['Kitchen', 'Table', 'Corner', 'Street'],
-                simple: ['Bistro', 'Cafe', 'Market', 'House', 'Co']
+                direct: ['Food Co', 'Kitchen Works', 'Culinary Studio', 'Food House', 'Kitchen Craft', 'Cuisine Co', 'Food Partners'],
+                emotions: ['Nourish', 'Comfort', 'Joy', 'Satisfaction', 'Delight', 'Pleasure', 'Warmth'],
+                nature: ['Harvest', 'Garden', 'Farm', 'Fresh', 'Organic', 'Natural', 'Pure'],
+                experiences: ['Taste', 'Savor', 'Enjoy', 'Share', 'Celebrate', 'Gather', 'Feast'],
+                abstract: ['Culture', 'Tradition', 'Heritage', 'Craft', 'Art', 'Passion', 'Love']
             }
         };
         
         return industryMaps[keyword] || {
-            descriptors: ['Pro', 'Best', 'Smart', 'Quick', 'Modern', 'Pure', 'Top'],
-            locations: ['Hub', 'Center', 'Studio', 'Group'],
-            simple: ['Works', 'Plus', 'Solutions', 'Co', 'Services']
+            direct: ['Business Co', 'Professional Works', 'Expert Studio', 'Premier Group', 'Quality Partners', 'Elite Co', 'Prime Solutions'],
+            emotions: ['Passion', 'Excellence', 'Quality', 'Innovation', 'Dedication', 'Craft', 'Vision'],
+            nature: ['Element', 'Essence', 'Core', 'Foundation', 'Root', 'Source', 'Origin'],
+            experiences: ['Create', 'Build', 'Design', 'Craft', 'Make', 'Shape', 'Form'],
+            abstract: ['Art', 'Skill', 'Method', 'Way', 'Style', 'Approach', 'Philosophy']
         };
-    };
+    };    const creativeWords = getCreativeWords(primaryKeyword);
     
-    const simpleWords = getSimpleWords(primaryKeyword);
-      // Multiple randomization strategies for simple words
-    const shuffleDescriptors = [...simpleWords.descriptors].sort(() => Math.random() - 0.5);
-    const shuffleLocations = [...simpleWords.locations].sort(() => Math.random() - 0.5);
-    const shuffleSimple = [...simpleWords.simple].sort(() => Math.random() - 0.5);
+    // Shuffle all creative word categories for maximum variety
+    const shuffleDirect = [...creativeWords.direct].sort(() => Math.random() - 0.5);
+    const shuffleEmotions = [...creativeWords.emotions].sort(() => Math.random() - 0.5);
+    const shuffleNature = [...creativeWords.nature].sort(() => Math.random() - 0.5);
+    const shuffleExperiences = [...creativeWords.experiences].sort(() => Math.random() - 0.5);
+    const shuffleAbstract = [...creativeWords.abstract].sort(() => Math.random() - 0.5);
     
-    // Simple connectors
-    const connectors = [' ', ''];
-    
-    // Prepare primary keyword for use in names (capitalize first letter)
-    const keywordCapitalized = primaryKeyword.charAt(0).toUpperCase() + primaryKeyword.slice(1);
+    // Balanced naming approaches - mix of direct and creative
+    const namingApproaches = [
+        'direct_name',         // Direct industry-related names
+        'direct_variation',    // Variations of direct names
+        'single_emotion',      // Creative emotional words
+        'single_nature',       // Creative nature-inspired words
+        'single_experience',   // Creative experience words
+        'single_abstract',     // Creative abstract concepts
+        'emotion_nature',      // Creative combinations
+        'nature_experience',   // Creative combinations
+        'abstract_emotion',    // Creative combinations
+        'creative_compound'    // Creative compound words
+    ];
     
     const names = [];
     const usedNames = new Set();
-      // Generate simple, keyword-focused combinations
-    for (let i = 0; i < 100 && names.length < 10; i++) {
-        const descriptorIndex = (i * randomSeed + microSeed) % shuffleDescriptors.length;
-        const locationIndex = (i * microSeed + timestamp % 1000) % shuffleLocations.length;
-        const simpleIndex = (i + randomSeed + microSeed) % shuffleSimple.length;
+    
+    // Generate a balanced mix of direct and creative names
+    for (let i = 0; i < 50 && names.length < 10; i++) {
+        const directIndex = (i * randomSeed) % shuffleDirect.length;
+        const emotionIndex = (i * randomSeed + microSeed) % shuffleEmotions.length;
+        const natureIndex = (i * microSeed + timestamp % 1000) % shuffleNature.length;
+        const experienceIndex = (i + randomSeed + microSeed) % shuffleExperiences.length;
+        const abstractIndex = (i + randomSeed) % shuffleAbstract.length;
         
-        const descriptor = shuffleDescriptors[descriptorIndex];
-        const location = shuffleLocations[locationIndex];
-        const simple = shuffleSimple[simpleIndex];
-        const connector = connectors[i % connectors.length];
+        const direct = shuffleDirect[directIndex];
+        const emotion = shuffleEmotions[emotionIndex];
+        const nature = shuffleNature[natureIndex];
+        const experience = shuffleExperiences[experienceIndex];
+        const abstract = shuffleAbstract[abstractIndex];
         
         let name;
-        const nameType = (i + randomSeed + microSeed) % 8; // Simple naming patterns only
+        let nameType = i % 10; // Use index for balanced distribution
         
         switch (nameType) {
             case 0:
-                // Descriptor + Keyword (e.g., "Fresh Coffee")
-                name = `${descriptor}${connector}${keywordCapitalized}`;
-                break;
             case 1:
-                // Keyword + Simple (e.g., "Coffee House")
-                name = `${keywordCapitalized}${connector}${simple}`;
+                // Direct names (20% of names)
+                name = direct;
                 break;
             case 2:
-                // Location + Keyword (e.g., "Corner Coffee")
-                name = `${location}${connector}${keywordCapitalized}`;
+                // Direct variations
+                name = direct.replace(' Co', '').replace(' Works', '').replace(' Studio', '').replace(' Group', '').replace(' Partners', '');
                 break;
             case 3:
-                // Keyword + Location (e.g., "Coffee Corner")
-                name = `${keywordCapitalized}${connector}${location}`;
+                // Single emotional word (e.g., "Ember", "Radiance")
+                name = emotion;
                 break;
             case 4:
-                // Just Keyword + descriptor as one word (e.g., "CoffeePlus")
-                name = `${keywordCapitalized}${simple}`;
+                // Single nature-inspired word (e.g., "Crystal", "Grove")
+                name = nature;
                 break;
             case 5:
-                // Descriptor + keyword as one word (e.g., "FreshCoffee")
-                name = `${descriptor}${keywordCapitalized}`;
+                // Single experience word (e.g., "Flourish", "Transform")
+                name = experience;
                 break;
             case 6:
-                // Daily/Daily-like + keyword (e.g., "Daily Coffee")
-                const dailyWords = ['Daily', 'Local', 'Quick', 'Best'];
-                const dailyWord = dailyWords[i % dailyWords.length];
-                name = `${dailyWord}${connector}${keywordCapitalized}`;
+                // Single abstract concept (e.g., "Vision", "Legacy")
+                name = abstract;
+                break;
+            case 7:
+                // Emotion + Nature (e.g., "Ember Grove", "Radiant Crystal")
+                name = `${emotion} ${nature}`;
+                break;
+            case 8:
+                // Nature + Experience (e.g., "Crystal Flow", "Grove Rise")
+                name = `${nature} ${experience}`;
                 break;
             default:
-                // Simple keyword combinations (e.g., "The Coffee Shop")
-                const articles = ['The', ''];
-                const article = articles[i % articles.length];
-                name = article ? `${article} ${keywordCapitalized} ${simple}` : `${keywordCapitalized} ${simple}`;
+                // Abstract + Emotion (e.g., "Vision Spark", "Legacy Glow")
+                name = `${abstract} ${emotion}`;
         }
-          // Skip duplicates entirely to ensure only unique names
-        if (!usedNames.has(name.toLowerCase()) && name.length <= 25) {
+        
+        // Skip duplicates entirely to ensure only unique names
+        if (!usedNames.has(name.toLowerCase()) && name.length <= 30) {
             usedNames.add(name.toLowerCase());
             
-            // Generate simple, keyword-focused descriptions
-            const descriptionOptions = [
-                `A simple and memorable name that clearly represents your ${primaryKeyword} business.`,
-                `Straightforward ${primaryKeyword} business name that customers will easily remember.`,
-                `Clean and professional name perfect for a ${primaryKeyword} company.`,
-                `Easy-to-pronounce ${primaryKeyword} business name with clear market appeal.`,
-                `Simple ${primaryKeyword} name that directly communicates what you do.`
-            ];
+            // Generate descriptions that explain the connection to the business type
+            const getBusinessDescription = (name, nameType, keyword) => {
+                if (nameType <= 2) {
+                    // Direct name descriptions
+                    return `${name} clearly communicates your ${keyword} business focus, making it easy for customers to understand your services. This professional name builds immediate trust and industry recognition while maintaining a modern, sophisticated appeal.`;
+                } else {
+                    // Creative name descriptions
+                    const creativeDescriptions = [
+                        `${name} captures the essence and emotional appeal of the ${keyword} industry, creating a memorable brand that resonates with customers. This sophisticated name suggests quality, craftsmanship, and a premium experience.`,
+                        `${name} evokes the transformative power and beauty associated with ${keyword} businesses, appealing to customers seeking something special. The name conveys elegance, expertise, and attention to detail.`,
+                        `${name} represents the artistry and passion behind great ${keyword} experiences, creating an emotional connection with your target audience. This distinctive name suggests innovation while honoring traditional craftsmanship.`,
+                        `${name} embodies the spirit of excellence and creativity that defines the best ${keyword} businesses. The name appeals to discerning customers who appreciate quality and authentic experiences.`,
+                        `${name} reflects the journey and transformation that ${keyword} businesses provide to their customers. This evocative name suggests growth, discovery, and meaningful experiences.`,
+                        `${name} captures the sensory richness and emotional satisfaction that characterizes exceptional ${keyword} businesses. The name conveys luxury, comfort, and genuine care for customers.`
+                    ];
+                    
+                    return creativeDescriptions[(i + randomSeed) % creativeDescriptions.length];
+                }
+            };
             
-            const description = descriptionOptions[i % descriptionOptions.length];
-              names.push({
+            names.push({
                 name: name,
-                description: description
+                description: getBusinessDescription(name, nameType, primaryKeyword)
             });
         }
     }
