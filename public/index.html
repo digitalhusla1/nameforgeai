@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NameForge AI - Business Name Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        .input-group {
+            margin-bottom: 30px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e1e1e1;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            outline: none;
+        }
+
+        input[type="text"]:focus {
+            border-color: #667eea;
+        }
+
+        .generate-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            width: 100%;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .generate-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            display: none;
+            margin: 20px 0;
+            color: #666;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results {
+            margin-top: 30px;
+            display: none;
+        }
+
+        .results h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .name-item {
+            background: #f8f9ff;
+            border: 1px solid #e1e1e1;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .name-item:hover {
+            background: #667eea;
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .name-title {
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .name-description {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .copy-tooltip {
+            position: fixed;
+            background: #333;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            z-index: 1000;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>NameForge AI</h1>
+        <p class="subtitle">Generate creative business name ideas</p>
+        
+        <div class="input-group">
+            <input 
+                type="text" 
+                id="businessDescription" 
+                placeholder="Describe your business (e.g., eco-friendly coffee shop, tech startup, handmade jewelry)"
+                maxlength="200"
+            >
+        </div>
+        
+        <button class="generate-btn" onclick="generateBusinessNames()">
+            Generate Business Names
+        </button>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>AI is crafting unique names for your business...</p>
+        </div>
+        
+        <div class="results" id="results">
+            <h3>Your Business Name Ideas:</h3>
+            <div id="namesList"></div>
+        </div>
+    </div>
+
+    <div class="copy-tooltip" id="copyTooltip">Copied to clipboard!</div>
+      <script>
+        // API Configuration - Updated for Netlify Functions
+        const API_BASE_URL = window.location.origin;
+        const API_ENDPOINT = '/.netlify/functions/generate-names';
+
+        async function generateBusinessNames() {
+            const description = document.getElementById('businessDescription').value.trim();
+            
+            if (!description) {
+                alert('Please enter a business description first!');
+                return;
+            }
+
+            showLoading(true);
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}${API_ENDPOINT}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ description })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'API request failed');
+                }
+
+                const data = await response.json();
+                
+                if (data.success && data.names && data.names.length > 0) {
+                    displayResults(data.names);
+                    
+                    if (data.source === 'fallback') {
+                        showNotification('Names generated using backup method', 'info');
+                    }
+                } else {
+                    throw new Error('No names generated');
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                
+                let errorMessage = 'Sorry, there was an error generating names. ';
+                if (error.message.includes('Failed to fetch')) {
+                    errorMessage += 'Please check your internet connection and try again.';
+                } else if (error.message.includes('Validation error')) {
+                    errorMessage += error.message;
+                } else {
+                    errorMessage += 'Please try again in a moment.';
+                }
+                
+                alert(errorMessage);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(notification => notification.remove());
+            
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.textContent = message;
+            
+            if (!document.querySelector('#notification-styles')) {
+                const style = document.createElement('style');
+                style.id = 'notification-styles';
+                style.textContent = `
+                    .notification {
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        padding: 15px 20px;
+                        border-radius: 5px;
+                        color: white;
+                        font-weight: bold;
+                        z-index: 2000;
+                        max-width: 400px;
+                        animation: slideIn 0.3s ease-out;
+                    }
+                    .notification-error {
+                        background-color: #e74c3c;
+                        border-left: 5px solid #c0392b;
+                    }
+                    .notification-info {
+                        background-color: #3498db;
+                        border-left: 5px solid #2980b9;
+                    }
+                    .notification-success {
+                        background-color: #2ecc71;
+                        border-left: 5px solid #27ae60;
+                    }
+                    @keyframes slideIn {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        function showLoading(show) {
+            const loading = document.getElementById('loading');
+            const button = document.querySelector('.generate-btn');
+            const results = document.getElementById('results');
+            
+            if (show) {
+                loading.style.display = 'block';
+                button.disabled = true;
+                results.style.display = 'none';
+            } else {
+                loading.style.display = 'none';
+                button.disabled = false;
+            }
+        }
+
+        function displayResults(names) {
+            const namesList = document.getElementById('namesList');
+            const results = document.getElementById('results');
+            
+            namesList.innerHTML = '';
+            
+            names.forEach(nameObj => {
+                const nameItem = document.createElement('div');
+                nameItem.className = 'name-item';
+                nameItem.onclick = () => copyToClipboard(nameObj.name);
+                
+                nameItem.innerHTML = `
+                    <div class="name-title">${nameObj.name}</div>
+                    <div class="name-description">${nameObj.description}</div>
+                `;
+                
+                namesList.appendChild(nameItem);
+            });
+            
+            results.style.display = 'block';
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showCopyTooltip();
+            });
+        }
+
+        function showCopyTooltip() {
+            const tooltip = document.getElementById('copyTooltip');
+            tooltip.style.display = 'block';
+            tooltip.style.left = '50%';
+            tooltip.style.top = '50%';
+            tooltip.style.transform = 'translate(-50%, -50%)';
+            
+            setTimeout(() => {
+                tooltip.style.display = 'none';
+            }, 2000);
+        }
+
+        // Allow Enter key to trigger generation
+        document.getElementById('businessDescription').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                generateBusinessNames();
+            }
+        });
+    </script>
+</body>
+</html>
