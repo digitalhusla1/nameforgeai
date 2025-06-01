@@ -289,191 +289,8 @@ function parseTextResponse(text) {
     return names.slice(0, 10);
 }
 
-// Fallback name generation with maximum randomization and keyword focus
-function generateFallbackNames(description, requestId = null) {
-    console.log('🎲 Generating fallback names with maximum uniqueness and keyword focus');
-    
-    const timestamp = Date.now();
-    const randomSeed = Math.floor(Math.random() * 100000);
-    const microSeed = Math.floor(Math.random() * 1000000);
-    
-    // Extract keywords using the same function as AI generation
-    const keywordData = extractKeywords(description);
-    console.log(`🔍 Fallback using keywords:`, keywordData);
-    
-    const primaryKeyword = keywordData.primary;
-    const secondaryKeyword = keywordData.secondary;    // Creative word banks that evoke the essence of different industries
-    const getCreativeWords = (keyword) => {
-        const industryMaps = {
-            coffee: {
-                direct: ['Roastery', 'Bean Co', 'Brew House', 'Coffee Works', 'Grind Studio', 'Café Central', 'Roast & Co'],
-                emotions: ['Ember', 'Dawn', 'Spark', 'Glow', 'Warmth', 'Comfort', 'Ritual'],
-                nature: ['Bean', 'Roast', 'Steam', 'Aroma', 'Grove', 'Harvest', 'Origin'],
-                experiences: ['Morning', 'Awaken', 'Gather', 'Social', 'Pause', 'Moment', 'Connect'],
-                abstract: ['Essence', 'Craft', 'Culture', 'Tradition', 'Art', 'Journey', 'Story']
-            },
-            jewelry: {
-                direct: ['Gem Studio', 'Silver & Stone', 'Precious Works', 'Jewel Craft', 'Gold & Grace', 'Crystal Co', 'Fine Jewelry'],
-                emotions: ['Radiance', 'Elegance', 'Grace', 'Allure', 'Brilliance', 'Charm', 'Mystique'],
-                nature: ['Crystal', 'Pearl', 'Gold', 'Silver', 'Stone', 'Gem', 'Mineral'],
-                experiences: ['Adorn', 'Celebrate', 'Honor', 'Cherish', 'Treasure', 'Memory', 'Gift'],
-                abstract: ['Legacy', 'Heritage', 'Artistry', 'Vision', 'Beauty', 'Wonder', 'Magic']
-            },
-            tech: {
-                direct: ['Tech Solutions', 'Code Studio', 'Digital Works', 'Tech Labs', 'Innovation Hub', 'Software Co', 'Data Systems'],
-                emotions: ['Innovation', 'Progress', 'Discovery', 'Wonder', 'Curiosity', 'Ambition', 'Vision'],
-                nature: ['Circuit', 'Code', 'Data', 'Logic', 'Network', 'System', 'Platform'],
-                experiences: ['Connect', 'Create', 'Build', 'Transform', 'Evolve', 'Advance', 'Explore'],
-                abstract: ['Future', 'Digital', 'Virtual', 'Intelligence', 'Algorithm', 'Innovation', 'Solution']
-            },
-            fitness: {
-                direct: ['Fitness Studio', 'Gym Works', 'Training Center', 'Fitness Co', 'Workout Hub', 'Health Club', 'Fit Studio'],
-                emotions: ['Strength', 'Power', 'Energy', 'Vitality', 'Confidence', 'Determination', 'Spirit'],
-                nature: ['Core', 'Peak', 'Summit', 'Flow', 'Balance', 'Rhythm', 'Motion'],
-                experiences: ['Transform', 'Achieve', 'Overcome', 'Push', 'Strive', 'Excel', 'Triumph'],
-                abstract: ['Journey', 'Challenge', 'Goal', 'Progress', 'Discipline', 'Focus', 'Mindset']
-            },
-            consulting: {
-                direct: ['Consulting Group', 'Advisory Partners', 'Strategy Co', 'Business Solutions', 'Consulting Works', 'Expert Partners', 'Advisory Group'],
-                emotions: ['Wisdom', 'Trust', 'Insight', 'Clarity', 'Confidence', 'Authority', 'Expertise'],
-                nature: ['Path', 'Bridge', 'Foundation', 'Compass', 'Guide', 'Direction', 'Strategy'],
-                experiences: ['Guide', 'Lead', 'Advise', 'Navigate', 'Transform', 'Empower', 'Enable'],
-                abstract: ['Vision', 'Strategy', 'Solution', 'Knowledge', 'Method', 'Approach', 'Framework']
-            },
-            food: {
-                direct: ['Food Co', 'Kitchen Works', 'Culinary Studio', 'Food House', 'Kitchen Craft', 'Cuisine Co', 'Food Partners'],
-                emotions: ['Nourish', 'Comfort', 'Joy', 'Satisfaction', 'Delight', 'Pleasure', 'Warmth'],
-                nature: ['Harvest', 'Garden', 'Farm', 'Fresh', 'Organic', 'Natural', 'Pure'],
-                experiences: ['Taste', 'Savor', 'Enjoy', 'Share', 'Celebrate', 'Gather', 'Feast'],
-                abstract: ['Culture', 'Tradition', 'Heritage', 'Craft', 'Art', 'Passion', 'Love']
-            }
-        };
-        
-        return industryMaps[keyword] || {
-            direct: ['Business Co', 'Professional Works', 'Expert Studio', 'Premier Group', 'Quality Partners', 'Elite Co', 'Prime Solutions'],
-            emotions: ['Passion', 'Excellence', 'Quality', 'Innovation', 'Dedication', 'Craft', 'Vision'],
-            nature: ['Element', 'Essence', 'Core', 'Foundation', 'Root', 'Source', 'Origin'],
-            experiences: ['Create', 'Build', 'Design', 'Craft', 'Make', 'Shape', 'Form'],
-            abstract: ['Art', 'Skill', 'Method', 'Way', 'Style', 'Approach', 'Philosophy']
-        };
-    };    const creativeWords = getCreativeWords(primaryKeyword);
-    
-    // Shuffle all creative word categories for maximum variety
-    const shuffleDirect = [...creativeWords.direct].sort(() => Math.random() - 0.5);
-    const shuffleEmotions = [...creativeWords.emotions].sort(() => Math.random() - 0.5);
-    const shuffleNature = [...creativeWords.nature].sort(() => Math.random() - 0.5);
-    const shuffleExperiences = [...creativeWords.experiences].sort(() => Math.random() - 0.5);
-    const shuffleAbstract = [...creativeWords.abstract].sort(() => Math.random() - 0.5);
-    
-    // Balanced naming approaches - mix of direct and creative
-    const namingApproaches = [
-        'direct_name',         // Direct industry-related names
-        'direct_variation',    // Variations of direct names
-        'single_emotion',      // Creative emotional words
-        'single_nature',       // Creative nature-inspired words
-        'single_experience',   // Creative experience words
-        'single_abstract',     // Creative abstract concepts
-        'emotion_nature',      // Creative combinations
-        'nature_experience',   // Creative combinations
-        'abstract_emotion',    // Creative combinations
-        'creative_compound'    // Creative compound words
-    ];
-    
-    const names = [];
-    const usedNames = new Set();
-    
-    // Generate a balanced mix of direct and creative names
-    for (let i = 0; i < 50 && names.length < 10; i++) {
-        const directIndex = (i * randomSeed) % shuffleDirect.length;
-        const emotionIndex = (i * randomSeed + microSeed) % shuffleEmotions.length;
-        const natureIndex = (i * microSeed + timestamp % 1000) % shuffleNature.length;
-        const experienceIndex = (i + randomSeed + microSeed) % shuffleExperiences.length;
-        const abstractIndex = (i + randomSeed) % shuffleAbstract.length;
-        
-        const direct = shuffleDirect[directIndex];
-        const emotion = shuffleEmotions[emotionIndex];
-        const nature = shuffleNature[natureIndex];
-        const experience = shuffleExperiences[experienceIndex];
-        const abstract = shuffleAbstract[abstractIndex];
-        
-        let name;
-        let nameType = i % 10; // Use index for balanced distribution
-        
-        switch (nameType) {
-            case 0:
-            case 1:
-                // Direct names (20% of names)
-                name = direct;
-                break;
-            case 2:
-                // Direct variations
-                name = direct.replace(' Co', '').replace(' Works', '').replace(' Studio', '').replace(' Group', '').replace(' Partners', '');
-                break;
-            case 3:
-                // Single emotional word (e.g., "Ember", "Radiance")
-                name = emotion;
-                break;
-            case 4:
-                // Single nature-inspired word (e.g., "Crystal", "Grove")
-                name = nature;
-                break;
-            case 5:
-                // Single experience word (e.g., "Flourish", "Transform")
-                name = experience;
-                break;
-            case 6:
-                // Single abstract concept (e.g., "Vision", "Legacy")
-                name = abstract;
-                break;
-            case 7:
-                // Emotion + Nature (e.g., "Ember Grove", "Radiant Crystal")
-                name = `${emotion} ${nature}`;
-                break;
-            case 8:
-                // Nature + Experience (e.g., "Crystal Flow", "Grove Rise")
-                name = `${nature} ${experience}`;
-                break;
-            default:
-                // Abstract + Emotion (e.g., "Vision Spark", "Legacy Glow")
-                name = `${abstract} ${emotion}`;
-        }
-        
-        // Skip duplicates entirely to ensure only unique names
-        if (!usedNames.has(name.toLowerCase()) && name.length <= 30) {
-            usedNames.add(name.toLowerCase());
-            
-            // Generate descriptions that explain the connection to the business type
-            const getBusinessDescription = (name, nameType, keyword) => {
-                if (nameType <= 2) {
-                    // Direct name descriptions
-                    return `${name} clearly communicates your ${keyword} business focus, making it easy for customers to understand your services. This professional name builds immediate trust and industry recognition while maintaining a modern, sophisticated appeal.`;
-                } else {
-                    // Creative name descriptions
-                    const creativeDescriptions = [
-                        `${name} captures the essence and emotional appeal of the ${keyword} industry, creating a memorable brand that resonates with customers. This sophisticated name suggests quality, craftsmanship, and a premium experience.`,
-                        `${name} evokes the transformative power and beauty associated with ${keyword} businesses, appealing to customers seeking something special. The name conveys elegance, expertise, and attention to detail.`,
-                        `${name} represents the artistry and passion behind great ${keyword} experiences, creating an emotional connection with your target audience. This distinctive name suggests innovation while honoring traditional craftsmanship.`,
-                        `${name} embodies the spirit of excellence and creativity that defines the best ${keyword} businesses. The name appeals to discerning customers who appreciate quality and authentic experiences.`,
-                        `${name} reflects the journey and transformation that ${keyword} businesses provide to their customers. This evocative name suggests growth, discovery, and meaningful experiences.`,
-                        `${name} captures the sensory richness and emotional satisfaction that characterizes exceptional ${keyword} businesses. The name conveys luxury, comfort, and genuine care for customers.`
-                    ];
-                    
-                    return creativeDescriptions[(i + randomSeed) % creativeDescriptions.length];
-                }
-            };
-            
-            names.push({
-                name: name,
-                description: getBusinessDescription(name, nameType, primaryKeyword)
-            });
-        }
-    }
-    
-    return names;
-}
-
 // Netlify Function Handler
-exports.handler = async (event, context) => {    // Handle CORS with maximum anti-caching
+exports.handler = async (event, context) => {// Handle CORS with maximum anti-caching
     const headers = {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': 'Content-Type, Cache-Control, X-Request-ID, X-Session-ID, X-User-Agent, Pragma, Expires',
@@ -548,8 +365,7 @@ exports.handler = async (event, context) => {    // Handle CORS with maximum ant
         console.log(`📝 Request ID: ${requestId}`);
         console.log(`🔢 Click Count: ${clickCount}, Performance: ${performanceNow}`);
         console.log(`🕒 Timestamp: ${body.timestamp || 'not provided'}`);
-        
-        // Try Gemini API first with enhanced uniqueness
+          // Use Gemini API only - no fallback
         const names = await callGeminiAPI(description, requestId, clickCount, performanceNow);
           if (names && names.length > 0) {
             console.log(`✅ Successfully generated ${names.length} names with request ID: ${requestId}`);
@@ -564,49 +380,32 @@ exports.handler = async (event, context) => {    // Handle CORS with maximum ant
                 })
             };
         } else {
-            // Fallback to local generation
-            console.log('🔄 Using fallback name generation');
-            const fallbackNames = generateFallbackNames(description, requestId);
+            // API failed - return error instead of fallback
+            console.log('❌ Gemini API failed to generate names');
             return {
-                statusCode: 200,
+                statusCode: 503,
                 headers,
                 body: JSON.stringify({
-                    success: true,
-                    names: fallbackNames,
-                    source: 'fallback',
-                    requestId: requestId,
-                    message: 'Generated using fallback method due to API unavailability'
+                    success: false,
+                    error: 'API service unavailable',
+                    message: 'Unable to generate business names. Please try again in a moment.',
+                    requestId: requestId
                 })
             };
         }
         
     } catch (error) {
         console.error('❌ Error in generate-names:', error);
-          // Always provide fallback names
-        try {
-            const requestId = `fallback-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
-            const fallbackNames = generateFallbackNames(body?.description || 'business', requestId);
-            return {
-                statusCode: 200,
-                headers,
-                body: JSON.stringify({
-                    success: true,
-                    names: fallbackNames,
-                    source: 'fallback',
-                    requestId: requestId,
-                    message: 'Generated using fallback method due to API error'
-                })
-            };
-        } catch (fallbackError) {
-            console.error('❌ Fallback generation failed:', fallbackError);
-            return {
-                statusCode: 500,
-                headers,
-                body: JSON.stringify({
-                    error: 'Generation failed',
-                    message: 'Unable to generate business names at this time'
-                })
-            };
-        }
+          // Return error instead of fallback
+        return {
+            statusCode: 500,
+            headers,
+            body: JSON.stringify({
+                success: false,
+                error: 'Service error',
+                message: 'Unable to generate business names. Please try again later.',
+                details: error.message
+            })
+        };
     }
 };
