@@ -1,4 +1,5 @@
 const fetch = require('node-fetch');
+const Replicate = require('replicate');
 
 // Validation function
 const validateBusinessDescription = (description) => {
@@ -260,6 +261,97 @@ Ensure the mix includes both direct industry-connected names AND creative concep
     }
 }
 
+// Replicate API function as backup
+async function callReplicateAPI(description, requestId = null, clickCount = 1, performanceNow = 0) {
+    const REPLICATE_API_TOKEN = process.env.REPLICATE_API_TOKEN;
+    
+    if (!REPLICATE_API_TOKEN) {
+        console.warn('⚠️ REPLICATE_API_TOKEN not found in environment variables');
+        return null;
+    }
+    
+    try {
+        const replicate = new Replicate({
+            auth: REPLICATE_API_TOKEN,
+        });
+        
+        // Extract keywords from the business description
+        const keywordData = extractKeywords(description);
+        console.log(`🔍 Replicate using keywords:`, keywordData);
+        
+        // Generate unique variations for each request
+        const timestamp = Date.now();
+        const randomSeed = Math.floor(Math.random() * 100000);
+        const requestIdentifier = requestId || `replicate-req-${timestamp}-${randomSeed}`;
+        
+        const prompt = `Generate exactly 10 creative, meaningful business names for: "${description}".
+
+CRITICAL NAMING REQUIREMENTS:
+- Primary keyword: "${keywordData.primary}" - Create names that are MEANINGFULLY CONNECTED to this keyword
+- Generate a BALANCED MIX of direct and creative names that all relate to "${keywordData.primary}"
+- ALL names must have a clear connection to the "${keywordData.primary}" industry/concept
+
+NAMING STRATEGY - Generate a balanced mix of:
+1. DIRECT NAMES (3-4 names): Modern, sophisticated names that clearly connect to "${keywordData.primary}"
+   - Examples: For "coffee" → "Roastery", "Bean & Co", "Brew House"
+   - Examples: For "jewelry" → "Gem Studio", "Silver & Stone", "Precious Works"
+   
+2. CREATIVE CONCEPTUAL NAMES (6-7 names): Poetic names inspired by "${keywordData.primary}" essence
+   - Examples: For "coffee" → "Morning Ritual", "Ember", "Awakening"
+   - Examples: For "jewelry" → "Radiance", "Eternal Sparkle", "Crystal Dreams"
+
+QUALITY REQUIREMENTS:
+- Names should be 1-3 words maximum, elegant and professional
+- Each name must be brandable, memorable, and unique
+- Names should sound premium and trustworthy
+- All names must have clear relevance to "${keywordData.primary}" business
+
+For each name, provide a compelling description (2-3 sentences) that explains:
+- HOW the name connects to the "${keywordData.primary}" business
+- WHY it would appeal to customers
+
+Please format your response exactly like this:
+1. BusinessName - Explanation of connection to ${keywordData.primary} business and customer appeal
+2. AnotherName - Explanation of connection to ${keywordData.primary} business and customer appeal
+3. ThirdName - Explanation of connection to ${keywordData.primary} business and customer appeal
+(continue for all 10 names)
+
+Request ID: ${requestIdentifier}`;
+
+        console.log(`🔄 Calling Replicate API with request ID: ${requestIdentifier}...`);
+        
+        const input = {
+            top_p: 0.9,
+            prompt: prompt,
+            temperature: 0.8,
+            max_new_tokens: 1200,
+            system_prompt: "You are a creative business naming expert who generates sophisticated, brandable business names with meaningful connections to the industry."
+        };
+
+        let generatedText = '';
+        
+        // Stream the response
+        for await (const event of replicate.stream("meta/llama-2-7b-chat", { input })) {
+            generatedText += event;
+        }
+        
+        console.log('📝 Generated text received from Replicate');
+        
+        const parsedNames = parseTextResponse(generatedText);
+        
+        if (parsedNames.length === 0) {
+            console.warn('⚠️ Failed to parse names from Replicate response');
+            return null;
+        }
+        
+        return parsedNames;
+        
+    } catch (error) {
+        console.error('❌ Replicate API error:', error.message);
+        return null;
+    }
+}
+
 // Parse Gemini API response
 function parseTextResponse(text) {
     const lines = text.split('\n').filter(line => line.trim());
@@ -364,35 +456,59 @@ exports.handler = async (event, context) => {// Handle CORS with maximum anti-ca
         
         console.log(`📝 Request ID: ${requestId}`);
         console.log(`🔢 Click Count: ${clickCount}, Performance: ${performanceNow}`);
-        console.log(`🕒 Timestamp: ${body.timestamp || 'not provided'}`);
-          // Use Gemini API only - no fallback
-        const names = await callGeminiAPI(description, requestId, clickCount, performanceNow);
-          if (names && names.length > 0) {
-            console.log(`✅ Successfully generated ${names.length} names with request ID: ${requestId}`);
+        console.log(`🕒 Timestamp: ${body.timestamp || 'not provided'}`);        // Enhanced API calling with multiple providers and better error handling
+        console.log('🚀 Starting API generation process...');
+        
+        // Try Gemini API first
+        console.log('🔄 Attempting Gemini API...');
+        const geminiNames = await callGeminiAPI(description, requestId, clickCount, performanceNow);
+        
+        if (geminiNames && geminiNames.length > 0) {
+            console.log(`✅ Successfully generated ${geminiNames.length} names with Gemini API`);
             return {
                 statusCode: 200,
                 headers,
                 body: JSON.stringify({
                     success: true,
-                    names: names,
+                    names: geminiNames,
                     source: 'gemini-api',
                     requestId: requestId
                 })
             };
-        } else {
-            // API failed - return error instead of fallback
-            console.log('❌ Gemini API failed to generate names');
+        }
+        
+        // Gemini failed, try Replicate API as backup
+        console.log('🔄 Gemini API failed, attempting Replicate API as backup...');
+        const replicateNames = await callReplicateAPI(description, requestId, clickCount, performanceNow);
+        
+        if (replicateNames && replicateNames.length > 0) {
+            console.log(`✅ Successfully generated ${replicateNames.length} names with Replicate API`);
             return {
-                statusCode: 503,
+                statusCode: 200,
                 headers,
                 body: JSON.stringify({
-                    success: false,
-                    error: 'API service unavailable',
-                    message: 'Unable to generate business names. Please try again in a moment.',
-                    requestId: requestId
+                    success: true,
+                    names: replicateNames,
+                    source: 'replicate-api',
+                    requestId: requestId,
+                    message: 'Generated using backup API due to primary API being unavailable'
                 })
             };
         }
+        
+        // Both APIs failed
+        console.log('❌ All AI APIs failed to generate names');
+        return {
+            statusCode: 503,
+            headers,
+            body: JSON.stringify({
+                success: false,
+                error: 'All AI services unavailable',
+                message: 'Our AI naming services are currently experiencing high demand. Please try again in a few minutes.',
+                requestId: requestId,
+                details: 'Both primary and backup AI services are temporarily unavailable'
+            })
+        };
         
     } catch (error) {
         console.error('❌ Error in generate-names:', error);

@@ -240,11 +240,17 @@
                 
                 // Update click tracking
                 window.clickCount = (window.clickCount || 0) + 1;
-                window.lastGenerationTime = timestamp;
-
-                if (!response.ok) {
+                window.lastGenerationTime = timestamp;                if (!response.ok) {
                     const errorData = await response.json();
-                    throw new Error(errorData.message || 'API request failed');
+                    
+                    // Enhanced error handling for API limits and service issues
+                    if (response.status === 503) {
+                        throw new Error(errorData.message || 'AI services are currently experiencing high demand. Please try again in a few minutes.');
+                    } else if (response.status === 429) {
+                        throw new Error('API rate limit reached. Please wait a moment before trying again.');
+                    } else {
+                        throw new Error(errorData.message || 'API request failed');
+                    }
                 }
 
                 const data = await response.json();
@@ -252,26 +258,32 @@
                 if (data.success && data.names && data.names.length > 0) {
                     displayResults(data.names);
                     
-                    if (data.source === 'fallback') {
-                        showNotification('Names generated using backup method', 'info');
+                    // Show notification for backup API usage
+                    if (data.source === 'replicate-api') {
+                        showNotification('Names generated using backup AI service', 'info');
+                    } else if (data.source === 'gemini-api') {
+                        showNotification('Names generated successfully', 'success');
                     }
                 } else {
-                    throw new Error('No names generated');
+                    throw new Error(data.message || 'No names generated');
                 }
-                
-            } catch (error) {
+                  } catch (error) {
                 console.error('Error:', error);
                 
-                let errorMessage = 'Sorry, there was an error generating names. ';
-                if (error.message.includes('Failed to fetch')) {
-                    errorMessage += 'Please check your internet connection and try again.';
+                let errorMessage = '';
+                if (error.message.includes('high demand') || error.message.includes('unavailable')) {
+                    errorMessage = '🤖 Our AI services are currently experiencing high demand. Please try again in a few minutes.';
+                } else if (error.message.includes('rate limit')) {
+                    errorMessage = '⏱️ Please wait a moment before generating more names to avoid hitting rate limits.';
+                } else if (error.message.includes('Failed to fetch')) {
+                    errorMessage = '🌐 Please check your internet connection and try again.';
                 } else if (error.message.includes('Validation error')) {
-                    errorMessage += error.message;
+                    errorMessage = '❗ ' + error.message;
                 } else {
-                    errorMessage += 'Please try again in a moment.';
+                    errorMessage = '⚠️ Sorry, there was an error generating names. Please try again in a moment.';
                 }
                 
-                alert(errorMessage);
+                showNotification(errorMessage, 'error');
             } finally {
                 showLoading(false);
             }
