@@ -4,13 +4,13 @@
 [![Node.js](https://img.shields.io/badge/Node.js-v14%2B-green.svg)](https://nodejs.org/)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/your-badge-id/deploy-status)](https://app.netlify.com/sites/nameforgeai/deploys)
 
-A modern, AI-powered business name generator that creates creative and professional business names using Replicate's Llama AI model. Features a beautiful responsive UI with serverless architecture optimized for Netlify deployment.
+A modern, AI-powered business name generator that creates creative and professional business names using Replicate's DeepSeek-V3 AI model. Features a beautiful responsive UI with serverless architecture optimized for Netlify deployment.
 
 🌐 **Live Demo**: [https://nameforgeai.netlify.app](https://nameforgeai.netlify.app)
 
 ## ✨ Features
 
-- 🤖 **Replicate AI Integration**: Uses Replicate's Llama 2 model for creative name generation
+- 🤖 **Replicate AI Integration**: Uses Replicate's DeepSeek-V3 model for creative name generation
 - 🎨 **Beautiful UI**: Modern, responsive design with gradient backgrounds and smooth animations
 - 🔒 **Secure Serverless Architecture**: Netlify Functions keep API keys safe with environment variables
 - 🛡️ **Rate Limiting**: Built-in protection against API abuse
@@ -19,7 +19,7 @@ A modern, AI-powered business name generator that creates creative and professio
 - 🌐 **CORS Protection**: Configurable cross-origin resource sharing
 - 📱 **Mobile Responsive**: Works perfectly on all device sizes
 - ☁️ **Serverless Deployment**: Optimized for Netlify with automatic scaling
-- ⚡ **Fast Response**: Optimized API calls with 20-second average response time
+- ⚡ **Fast Response**: Optimized API calls with faster DeepSeek-V3 response times
 
 ## 🚀 Quick Start
 
@@ -147,9 +147,8 @@ NameForgeAI/
 
 ### Local Development Architecture
 
-- **Static File Serving**: HTML, CSS, and JavaScript served locally for development
-- **Netlify Functions**: Local simulation of serverless functions using Netlify CLI
-- **Replicate AI Integration**: Uses Replicate's Llama 2 model for name generation
+- **Local Development Architecture**: Static file serving with Netlify Functions simulation
+- **DeepSeek-V3 AI Integration**: Uses Replicate's DeepSeek-V3 model for enhanced name generation
 - **Environment Variables**: Local .env file for API key management
 - **Timeout Protection**: 25-second timeout protection to prevent function timeouts
 
@@ -180,7 +179,7 @@ NameForgeAI/
       "description": "Simple, memorable name combining eco-friendliness with coffee culture"
     }
   ],
-  "source": "replicate",
+  "source": "deepseek-v3",
   "timestamp": "2025-01-15T10:30:00Z"
 }
 ```
@@ -196,7 +195,7 @@ NameForgeAI/
 
 ### Supported AI Provider
 
-**Replicate**: Uses Llama 2-7B Chat model for creative and professional business name generation with optimized prompts for fast responses (~20 seconds average)
+**Replicate**: Uses DeepSeek-V3 model for creative and professional business name generation with optimized prompts for fast responses
 
 ### Validation Rules
 
@@ -306,9 +305,23 @@ curl -X POST http://localhost:8888/.netlify/functions/generate-names \
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+## 🔄 Changelog
+
+### v2.0.0 - DeepSeek-V3 Migration
+- **🚀 Model Upgrade**: Switched from Llama 2 to DeepSeek-V3 for improved performance
+- **⚡ Enhanced Speed**: Significantly faster response times
+- **🎯 Better Quality**: Improved name generation quality and creativity
+- **🔧 Updated API**: Enhanced response parsing for DeepSeek-V3 format
+- **📱 Frontend Updates**: Updated UI messages to reflect DeepSeek-V3 usage
+
+### v1.0.0 - Initial Release
+- Basic business name generation with Llama 2
+- Responsive web interface
+- Netlify deployment support
+
 ## 🙏 Acknowledgments
 
-- [Replicate](https://replicate.com/) for providing access to Llama 2 AI model
+- [Replicate](https://replicate.com/) for providing access to DeepSeek-V3 AI model
 - [Netlify](https://netlify.com/) for serverless hosting and functions
 - [Font Awesome](https://fontawesome.com/) for icons (if used)
 
