@@ -4,8 +4,7 @@
   publish = "public"
 
 [dev]
-  command = "npm run dev"
-  port = 3000
+  port = 8888
 
 [[redirects]]
   from = "/api/*"

@@ -316,9 +316,7 @@ Please format your response exactly like this:
 3. ThirdName - Explanation of connection to ${keywordData.primary} business and customer appeal
 (continue for all 10 names)
 
-Request ID: ${requestIdentifier}`;
-
-        console.log(`🔄 Calling Replicate API with request ID: ${requestIdentifier}...`);
+Request ID: ${requestIdentifier}`;        console.log(`🔄 Calling Replicate API with request ID: ${requestIdentifier}...`);
         
         const input = {
             top_p: 0.9,
@@ -328,14 +326,23 @@ Request ID: ${requestIdentifier}`;
             system_prompt: "You are a creative business naming expert who generates sophisticated, brandable business names with meaningful connections to the industry."
         };
 
-        let generatedText = '';
+        // Use replicate.run instead of stream for better response handling
+        const output = await replicate.run("meta/llama-2-7b-chat", { input });
         
-        // Stream the response
-        for await (const event of replicate.stream("meta/llama-2-7b-chat", { input })) {
-            generatedText += event;
+        console.log('📝 Generated response received from Replicate');
+        
+        // Handle array response from Replicate API
+        let generatedText = '';
+        if (Array.isArray(output)) {
+            generatedText = output.join('');
+        } else if (typeof output === 'string') {
+            generatedText = output;
+        } else {
+            console.warn('⚠️ Unexpected response format from Replicate API:', typeof output);
+            return null;
         }
         
-        console.log('📝 Generated text received from Replicate');
+        console.log('📄 Processed text length:', generatedText.length);
         
         const parsedNames = parseTextResponse(generatedText);
         
