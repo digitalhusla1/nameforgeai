@@ -1,7 +1,6 @@
 {
   "name": "nameforge-ai",
-  "version": "1.0.0",
-  "description": "AI-powered business name generator using multiple AI providers",
+  "version": "1.0.0",  "description": "AI-powered business name generator using Replicate API",
   "main": "netlify/functions/generate-names.js",
   "scripts": {
     "build": "npm ci --only=production",
@@ -13,19 +12,17 @@
     "name",
     "generator",
     "ai",
-    "gemini",
+    "replicate",
     "creativity"
   ],
   "author": "Your Name",
-  "license": "MIT",
-  "dependencies": {
+  "license": "MIT",  "dependencies": {
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^4.18.2",
     "express-rate-limit": "^7.1.5",
     "helmet": "^7.1.0",
-    "node-fetch": "^2.7.0",
     "replicate": "^1.0.1"
   },
   "devDependencies": {

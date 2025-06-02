@@ -263,14 +263,15 @@
             padding: 0 20px;
         }
 
-        .footer-content {
+        .footer-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 30px;
             margin-bottom: 30px;
         }
 
-        .footer-section h3 {
+        .footer-section h3,
+        .footer-section h4 {
             color: #333;
             font-size: 1.3rem;
             margin-bottom: 15px;
@@ -278,6 +279,10 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+        }
+
+        .footer-section h4 {
+            font-size: 1.1rem;
         }
 
         .footer-section p {
@@ -298,44 +303,30 @@
             color: #666;
             text-decoration: none;
             transition: color 0.3s ease;
-        }        .footer-links a:hover {
+        }
+
+        .footer-links a:hover {
             color: #667eea;
         }
 
-        .social-links {
-            display: flex;
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .social-links a {
-            font-size: 1.5rem;
-            text-decoration: none;
-            transition: transform 0.3s ease;
-        }
-
-        .social-links a:hover {
-            transform: translateY(-2px);
-        }
-
-        .contact-info p {
+        .footer-contact-info p {
             color: #666;
             margin-bottom: 8px;
             font-size: 0.9rem;
         }
 
         .footer-bottom {
-            border-top: 1px solid #eee;
+            border-top: 1px solid #e1e1e1;
             padding-top: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
+            text-align: center;
+            color: #999;
+            font-size: 0.9rem;
         }
 
-        .copyright {
-            color: #666;        font-size: 0.9rem;
+        .footer-bottom p {
+            color: #999;
+            font-size: 0.9rem;
+            margin: 5px 0;
         }
 
         /* Mobile Responsive */
@@ -367,7 +358,6 @@
             }
 
             .footer-bottom {
-                flex-direction: column;
                 text-align: center;
             }
 
@@ -380,7 +370,7 @@
                 margin: 20px;
             }
 
-            .footer-content {
+            .footer-grid {
                 grid-template-columns: 1fr;
                 gap: 25px;
             }
@@ -432,23 +422,18 @@
                 <div id="namesList"></div>
             </div>
         </div>
-    </main>
-
+    </main>    
     <!-- Footer -->
     <footer class="footer">
-        <div class="footer-container">            <div class="footer-content">
+        <div class="footer-container">
+            <div class="footer-grid">
                 <div class="footer-section">
                     <h3>NameForge AI</h3>
                     <p>The premier AI-powered business name generator. Create unique, memorable, and brandable names for your business in seconds.</p>
-                    <div class="social-links">
-                        <a href="#" title="Twitter">🐦</a>
-                        <a href="#" title="LinkedIn">💼</a>
-                        <a href="#" title="Facebook">📘</a>
-                    </div>
                 </div>
                 
                 <div class="footer-section">
-                    <h3>Quick Links</h3>
+                    <h4>Quick Links</h4>
                     <ul class="footer-links">
                         <li><a href="index.html">Home</a></li>
                         <li><a href="about.html">About Us</a></li>
@@ -458,21 +443,21 @@
                 </div>
                 
                 <div class="footer-section">
-                    <h3>Support</h3>
+                    <h4>Support</h4>
                     <ul class="footer-links">
                         <li><a href="contact.html">Help Center</a></li>
-                        <li><a href="contact.html">Contact Support</a></li>
+                        <li><a href="contact.html">Contact Support</a></li>                        
                         <li><a href="#">FAQ</a></li>
                     </ul>
                 </div>
-                
-                <div class="footer-section">
-                    <h3>Contact Info</h3>
-                    <div class="contact-info">
+                  <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <div class="footer-contact-info">
                         <p>📧 support@nameforge-ai.com</p>
-                        <p>📞 +1 (555) 123-4567</p>
+                        <p>📞 +1 (415) 276-7084</p>
                         <p>🏢 San Francisco, CA</p>
-                    </div>                </div>
+                    </div>
+                </div>
             </div>
             
             <div class="footer-bottom">
@@ -531,12 +516,11 @@
                 
                 if (data.success && data.names && data.names.length > 0) {
                     displayResults(data.names, data.source);
-                    
-                    // Show appropriate message based on source
-                    if (data.source === 'gemini-ai') {
-                        showNotification('🤖 Names generated with AI!', 'success');
-                    } else if (data.source === 'fallback-generator') {
-                        showNotification('✨ Names generated with smart fallback!', 'info');
+                      // Show appropriate message based on source
+                    if (data.source === 'replicate-api') {
+                        showNotification('🤖 Names generated with Replicate AI!', 'success');
+                    } else {
+                        showNotification('✨ Names generated successfully!', 'info');
                     }
                 } else {
                     throw new Error(data.message || config.MESSAGES.API.GENERATION_FAILED);
@@ -580,12 +564,10 @@
             const namesList = document.getElementById('namesList');
             
             namesList.innerHTML = '';
-            
-            // Add source indicator
+              // Add source indicator
             const sourceDiv = document.createElement('div');
             sourceDiv.style.cssText = 'text-align: center; margin-bottom: 20px; color: #666; font-size: 0.9rem;';
-            sourceDiv.textContent = source === 'gemini-ai' ? '🤖 Generated with Google Gemini AI' : 
-                                  source === 'fallback-generator' ? '✨ Generated with Smart Algorithm' : 
+            sourceDiv.textContent = source === 'replicate-api' ? '🤖 Generated with AI' : 
                                   '🎯 Generated Successfully';
             namesList.appendChild(sourceDiv);
             

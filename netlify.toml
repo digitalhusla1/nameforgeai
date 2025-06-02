@@ -3,6 +3,9 @@
   functions = "netlify/functions"
   publish = "public"
 
+[functions]
+  external_node_modules = ["replicate"]
+
 [dev]
   port = 8888
 

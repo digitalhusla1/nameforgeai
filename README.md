@@ -4,36 +4,36 @@
 [![Node.js](https://img.shields.io/badge/Node.js-v14%2B-green.svg)](https://nodejs.org/)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/your-badge-id/deploy-status)](https://app.netlify.com/sites/nameforgeai/deploys)
 
-A modern, AI-powered business name generator that creates creative and professional business names using multiple AI providers including Google Gemini and Replicate. Features a beautiful responsive UI with serverless architecture optimized for Netlify deployment.
+A modern, AI-powered business name generator that creates creative and professional business names using Replicate's Llama AI model. Features a beautiful responsive UI with serverless architecture optimized for Netlify deployment.
 
 🌐 **Live Demo**: [https://nameforgeai.netlify.app](https://nameforgeai.netlify.app)
 
 ## ✨ Features
 
-- 🤖 **Multi-AI Integration**: Uses Google Gemini and Replicate APIs for diverse name suggestions
+- 🤖 **Replicate AI Integration**: Uses Replicate's Llama 2 model for creative name generation
 - 🎨 **Beautiful UI**: Modern, responsive design with gradient backgrounds and smooth animations
 - 🔒 **Secure Serverless Architecture**: Netlify Functions keep API keys safe with environment variables
 - 🛡️ **Rate Limiting**: Built-in protection against API abuse
 - 📋 **Copy to Clipboard**: One-click copying of generated names
-- 🔄 **Smart Fallback System**: Multiple AI providers ensure high availability
 - ⚡ **Real-time Validation**: Input validation and user-friendly error messages
 - 🌐 **CORS Protection**: Configurable cross-origin resource sharing
 - 📱 **Mobile Responsive**: Works perfectly on all device sizes
 - ☁️ **Serverless Deployment**: Optimized for Netlify with automatic scaling
+- ⚡ **Fast Response**: Optimized API calls with 20-second average response time
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
 - **Node.js** v14.0.0 or higher (for local development)
-- **Google Gemini API Key** ([Get one here](https://makersuite.google.com/app/apikey))
+- **Replicate API Token** ([Get one here](https://replicate.com/account/api-tokens))
 - **Netlify Account** for deployment ([Sign up here](https://netlify.com))
 
 ### Local Development
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/digitalhusla1/nameforgeai.git
+   git clone https://github.com/yourusername/nameforgeai.git
    cd nameforgeai
    ```
 
@@ -46,8 +46,8 @@ A modern, AI-powered business name generator that creates creative and professio
    ```bash
    # Copy the example environment file
    cp .env.example .env
-     # Edit .env and add your API keys
-   GEMINI_API_KEY=your_actual_api_key_here
+   
+   # Edit .env and add your API key
    REPLICATE_API_TOKEN=r8_your_replicate_token_here
    ```
 
@@ -62,53 +62,55 @@ A modern, AI-powered business name generator that creates creative and professio
 ### Netlify Deployment
 
 1. **Fork this repository** to your GitHub account
-2. **Connect to Netlify**: Go to [Netlify](https://netlify.com) and connect your GitHub repo
+
+2. **Connect to Netlify**: 
+   - Go to [Netlify](https://netlify.com) 
+   - Click "New site from Git"
+   - Choose GitHub and select your forked repository
+   - Use these build settings:
+     - **Build command**: `npm install` (or leave empty)
+     - **Publish directory**: `public`
+     - **Functions directory**: `netlify/functions`
+
 3. **Set Environment Variables** in Netlify Dashboard:
-   - `GEMINI_API_KEY`
-   - `REPLICATE_API_TOKEN`
-   - `NODE_ENV=production`
-4. **Deploy**: Netlify will automatically build and deploy your site
+   - Go to Site settings → Environment variables
+   - Add: `REPLICATE_API_TOKEN` with your Replicate API token
+   - Add: `NODE_ENV` set to `production`
+
+4. **Deploy**: Click "Deploy site" - Netlify will automatically build and deploy your site
+
+5. **Custom Domain** (Optional):
+   - In Site settings → Domain management
+   - Add your custom domain and configure DNS
 
 ## 🔧 Configuration
 
 ### Environment Variables
 
-The application supports multiple AI providers. Create a `.env` file with the following variables:
+The application uses Replicate AI for business name generation. Create a `.env` file with the following variables:
 
 | Variable | Description | Default | Required |
 |----------|-------------|---------|----------|
-| `GEMINI_API_KEY` | Your Google Gemini API key | - | ✅ |
-| `REPLICATE_API_TOKEN` | Your Replicate API token (must start with `r8_`) | - | ❌ |
-| `GEMINI_API_URL` | Gemini API endpoint | `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent` | ❌ |
-| `PORT` | Server port | `3000` | ❌ |
+| `REPLICATE_API_TOKEN` | Your Replicate API token (must start with `r8_`) | - | ✅ |
+| `PORT` | Server port (local development only) | `3000` | ❌ |
 | `NODE_ENV` | Environment mode | `development` | ❌ |
-| `ALLOWED_ORIGINS` | Comma-separated CORS origins | `http://localhost:3000,http://127.0.0.1:3000` | ❌ |
-| `RATE_LIMIT_WINDOW_MS` | Rate limit window in milliseconds | `900000` (15 min) | ❌ |
-| `RATE_LIMIT_MAX_REQUESTS` | Max requests per window | `100` | ❌ |
 
 ### Example .env file
 ```env
-# Required
-GEMINI_API_KEY=your_actual_gemini_api_key_here
-
-# Optional (for enhanced functionality)
+# Required - Replicate API Token
 REPLICATE_API_TOKEN=r8_your_replicate_token_here
 
-# Server Configuration
+# Optional - Server Configuration
 PORT=3000
 NODE_ENV=development
 ```
 
 ### API Key Setup
 
-1. **Google Gemini API**:
-   - Visit [Google AI Studio](https://makersuite.google.com/app/apikey)   - Create a new API key
-   - Copy and add to `GEMINI_API_KEY`
-
-2. **Replicate API** (Optional):
-   - Visit [Replicate Account](https://replicate.com/account/api-tokens)
-   - Create an API token (starts with `r8_`)
-   - Add to `REPLICATE_API_TOKEN`
+**Replicate API**:
+- Visit [Replicate Account](https://replicate.com/account/api-tokens)
+- Create an API token (starts with `r8_`)
+- Add to `REPLICATE_API_TOKEN` in your `.env` file
 
 ## 📁 Project Structure
 
@@ -146,9 +148,10 @@ NameForgeAI/
 ### Local Development Architecture
 
 - **Static File Serving**: HTML, CSS, and JavaScript served locally for development
-- **Netlify Functions**: Local simulation of serverless functions
-- **Multi-AI Integration**: Supports Gemini and Replicate APIs
+- **Netlify Functions**: Local simulation of serverless functions using Netlify CLI
+- **Replicate AI Integration**: Uses Replicate's Llama 2 model for name generation
 - **Environment Variables**: Local .env file for API key management
+- **Timeout Protection**: 25-second timeout protection to prevent function timeouts
 
 ## 🌐 API Documentation
 
@@ -177,7 +180,7 @@ NameForgeAI/
       "description": "Simple, memorable name combining eco-friendliness with coffee culture"
     }
   ],
-  "source": "gemini",
+  "source": "replicate",
   "timestamp": "2025-01-15T10:30:00Z"
 }
 ```
@@ -191,10 +194,9 @@ NameForgeAI/
 }
 ```
 
-### Supported AI Providers
+### Supported AI Provider
 
-1. **Google Gemini** (Primary): High-quality creative name generation
-2. **Replicate** (Fallback): Access to various open-source models
+**Replicate**: Uses Llama 2-7B Chat model for creative and professional business name generation with optimized prompts for fast responses (~20 seconds average)
 
 ### Validation Rules
 
@@ -206,19 +208,19 @@ NameForgeAI/
 
 | Command | Description |
 |---------|-------------|
-| `npm start` | Start the production server |
-| `npm run dev` | Start development server with nodemon |
+| `npm start` | Start Netlify development server |
+| `npm run build` | Build for production (if needed) |
 | `npm test` | Run tests (placeholder) |
 
 ## 🏗️ Architecture
 
 ### Backend Components
 
-- **Express.js Server**: Handles HTTP requests and serves static files
-- **API Routes**: RESTful endpoints for name generation
-- **Gemini Integration**: Communicates with Google's AI API
-- **Security Middleware**: CORS, rate limiting, input validation
-- **Error Handling**: Graceful error responses and fallback generation
+- **Netlify Functions**: Serverless function for name generation (`generate-names.js`)
+- **Replicate Integration**: Communicates with Replicate's Llama 2 API
+- **Timeout Protection**: 25-second timeout to prevent function timeouts
+- **Input Validation**: Server-side validation of business descriptions
+- **Error Handling**: Graceful error responses with user-friendly messages
 
 ### Frontend Components
 
@@ -230,99 +232,67 @@ NameForgeAI/
 
 ### Security Features
 
-- **API Key Protection**: Keys stored securely on backend
-- **Rate Limiting**: Prevents API abuse
+- **API Key Protection**: Keys stored securely in Netlify environment variables
 - **Input Validation**: Server-side validation of all inputs
-- **CORS Configuration**: Controlled cross-origin access
+- **Timeout Protection**: Prevents function timeouts with 25-second limit
 - **Error Sanitization**: Safe error messages without sensitive data
+- **Serverless Security**: Built-in security features of Netlify Functions
 
 ## 🚀 Production Deployment
 
-### 1. Environment Setup
+### Netlify Deployment (Recommended)
+
+This application is optimized for Netlify deployment:
+
+1. **Automatic Builds**: Push to GitHub triggers automatic deployment
+2. **Environment Variables**: Set `REPLICATE_API_TOKEN` in Netlify dashboard
+3. **CDN Distribution**: Global CDN for fast content delivery
+4. **HTTPS**: Automatic SSL certificate provisioning
+5. **Custom Domains**: Easy custom domain configuration
+
+### Manual Deployment Steps
+
 ```bash
-# Set production environment
-export NODE_ENV=production
+# 1. Build the project (if needed)
+npm run build
 
-# Use production port
-export PORT=80
-```
+# 2. Deploy to Netlify via CLI
+npm install -g netlify-cli
+netlify deploy --prod --dir=public --functions=netlify/functions
 
-### 2. Process Management (PM2)
-```bash
-# Install PM2 globally
-npm install -g pm2
-
-# Start application
-pm2 start server.js --name "nameforge-ai"
-
-# Save PM2 configuration
-pm2 save
-
-# Enable startup script
-pm2 startup
-```
-
-### 3. Reverse Proxy (Nginx)
-```nginx
-server {
-    listen 80;
-    server_name yourdomain.com;
-
-    location / {
-        proxy_pass http://localhost:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_cache_bypass $http_upgrade;
-    }
-}
-```
-
-### 4. SSL Configuration
-```bash
-# Install Certbot
-sudo apt install certbot python3-certbot-nginx
-
-# Get SSL certificate
-sudo certbot --nginx -d yourdomain.com
+# 3. Set environment variables
+netlify env:set REPLICATE_API_TOKEN your_token_here
+netlify env:set NODE_ENV production
 ```
 
 ## 🧪 Development
 
 ### Local Development
 ```bash
-# Install nodemon for development
-npm install -g nodemon
+# Install Netlify CLI for local development
+npm install -g netlify-cli
 
-# Start development server with auto-reload
-npm run dev
+# Start development server with Netlify functions
+netlify dev
 ```
 
 ### Testing the API
 ```bash
-# Test the API endpoint
-curl -X POST http://localhost:3000/api/generate-names \
+# Test the Netlify function locally
+curl -X POST http://localhost:8888/.netlify/functions/generate-names \
   -H "Content-Type: application/json" \
-  -d '{"description": "tech startup"}'
+  -d '{\"description\": \"tech startup\"}'
 ```
 
 ## 📦 Dependencies
 
 ### Production Dependencies
-- **express**: Fast, minimalist web framework
-- **cors**: Cross-Origin Resource Sharing middleware
-- **dotenv**: Environment variable loader
-- **express-rate-limit**: Rate limiting middleware
-- **helmet**: Security middleware (optional)
-- **body-parser**: Request body parsing middleware
-- **node-fetch**: HTTP client for API requests
+- **@netlify/functions**: Netlify Functions runtime
+- **replicate**: Official Replicate API client
+- **dotenv**: Environment variable loader (for local development)
 
 ### Development Dependencies
-- **nodemon**: Development server with auto-reload
+- **netlify-cli**: Local development server with functions support
 
 ## 🤝 Contributing
 
@@ -338,8 +308,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- [Google Gemini AI](https://deepmind.google/technologies/gemini/) for providing the AI capabilities
-- [Express.js](https://expressjs.com/) for the web framework
+- [Replicate](https://replicate.com/) for providing access to Llama 2 AI model
+- [Netlify](https://netlify.com/) for serverless hosting and functions
 - [Font Awesome](https://fontawesome.com/) for icons (if used)
 
 ## 📞 Support
