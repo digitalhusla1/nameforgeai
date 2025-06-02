@@ -8,6 +8,11 @@
   port = 3000
 
 [[redirects]]
+  from = "/api/admin-panel"
+  to = "/.netlify/functions/admin-panel"
+  status = 200
+
+[[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/generate-names"
   status = 200
