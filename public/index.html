@@ -298,10 +298,30 @@
             color: #666;
             text-decoration: none;
             transition: color 0.3s ease;
+        }        .footer-links a:hover {
+            color: #667eea;
         }
 
-        .footer-links a:hover {
-            color: #667eea;
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .social-links a {
+            font-size: 1.5rem;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+
+        .social-links a:hover {
+            transform: translateY(-2px);
+        }
+
+        .contact-info p {
+            color: #666;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
         }
 
         .footer-bottom {
@@ -416,13 +436,17 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-content">
+        <div class="footer-container">            <div class="footer-content">
                 <div class="footer-section">
                     <h3>NameForge AI</h3>
-                    <p>Empowering entrepreneurs with AI-generated business names that resonate with their vision and market.</p>
-                    <p>Create memorable, professional business names in seconds.</p>
+                    <p>The premier AI-powered business name generator. Create unique, memorable, and brandable names for your business in seconds.</p>
+                    <div class="social-links">
+                        <a href="#" title="Twitter">🐦</a>
+                        <a href="#" title="LinkedIn">💼</a>
+                        <a href="#" title="Facebook">📘</a>
+                    </div>
                 </div>
+                
                 <div class="footer-section">
                     <h3>Quick Links</h3>
                     <ul class="footer-links">
@@ -432,19 +456,33 @@
                         <li><a href="privacy-policy.html">Privacy Policy</a></li>
                     </ul>
                 </div>
+                
                 <div class="footer-section">
                     <h3>Support</h3>
                     <ul class="footer-links">
-                        <li><a href="contact.html">Get Help</a></li>
-                        <li><a href="about.html">How It Works</a></li>
-                        <li><a href="contact.html">Feedback</a></li>
+                        <li><a href="contact.html">Help Center</a></li>
+                        <li><a href="contact.html">Contact Support</a></li>
+                        <li><a href="#">FAQ</a></li>
                     </ul>
                 </div>
-            </div>            <div class="footer-bottom">
-                <p class="copyright">© 2025 NameForge AI. All rights reserved.</p>
+                
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <div class="contact-info">
+                        <p>📧 support@nameforge-ai.com</p>
+                        <p>📞 +1 (555) 123-4567</p>
+                        <p>🏢 San Francisco, CA</p>
+                    </div>                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 NameForge AI. All rights reserved.</p>
+                <p>Powered by Advanced AI Technology</p>
             </div>
         </div>
-    </footer>    <div class="copy-tooltip" id="copyTooltip">Copied to clipboard!</div>
+    </footer>
+
+    <div class="copy-tooltip" id="copyTooltip">Copied to clipboard!</div>
 
     <!-- Configuration Script -->
     <script src="js/config.js"></script>    <script>
