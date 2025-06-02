@@ -2,13 +2,11 @@
 window.NameForgeConfig = {
     // API Configuration
     API_BASE_URL: window.location.origin,
-    
-    // Feature flags
+      // Feature flags
     FEATURES: {
         AI_GENERATION: true,
         FALLBACK_GENERATION: true,
-        COPY_TO_CLIPBOARD: true,
-        ADMIN_PANEL: true
+        COPY_TO_CLIPBOARD: true
     },
     
     // UI Configuration

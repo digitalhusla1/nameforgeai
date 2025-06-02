@@ -2,38 +2,39 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/Node.js-v14%2B-green.svg)](https://nodejs.org/)
-[![Express.js](https://img.shields.io/badge/Express.js-4.18.2-blue.svg)](https://expressjs.com/)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/your-badge-id/deploy-status)](https://app.netlify.com/sites/nameforgeai/deploys)
 
-A modern, AI-powered business name generator that creates creative and professional business names using Google Gemini AI. Features a beautiful responsive UI with secure backend architecture.
+A modern, AI-powered business name generator that creates creative and professional business names using multiple AI providers including Google Gemini and Replicate. Features a beautiful responsive UI with serverless architecture optimized for Netlify deployment.
 
-![NameForge AI Screenshot](https://via.placeholder.com/800x400?text=NameForge+AI+Screenshot)
+🌐 **Live Demo**: [https://nameforgeai.netlify.app](https://nameforgeai.netlify.app)
 
 ## ✨ Features
 
-- 🤖 **AI-Powered Generation**: Uses Google Gemini 2.0 Flash model for intelligent name suggestions
+- 🤖 **Multi-AI Integration**: Uses Google Gemini and Replicate APIs for diverse name suggestions
 - 🎨 **Beautiful UI**: Modern, responsive design with gradient backgrounds and smooth animations
-- 🔒 **Secure Architecture**: Backend API keeps your API keys safe from frontend exposure
+- 🔒 **Secure Serverless Architecture**: Netlify Functions keep API keys safe with environment variables
 - 🛡️ **Rate Limiting**: Built-in protection against API abuse
 - 📋 **Copy to Clipboard**: One-click copying of generated names
-- 🔄 **Fallback System**: Smart fallback name generation when API is unavailable
+- 🔄 **Smart Fallback System**: Multiple AI providers ensure high availability
 - ⚡ **Real-time Validation**: Input validation and user-friendly error messages
 - 🌐 **CORS Protection**: Configurable cross-origin resource sharing
 - 📱 **Mobile Responsive**: Works perfectly on all device sizes
+- ☁️ **Serverless Deployment**: Optimized for Netlify with automatic scaling
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
-- **Node.js** v14.0.0 or higher
-- **npm** or **yarn** package manager
+- **Node.js** v14.0.0 or higher (for local development)
 - **Google Gemini API Key** ([Get one here](https://makersuite.google.com/app/apikey))
+- **Netlify Account** for deployment ([Sign up here](https://netlify.com))
 
-### Installation
+### Local Development
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
-   cd NameForgeAI
+   git clone https://github.com/digitalhusla1/nameforgeai.git
+   cd nameforgeai
    ```
 
 2. **Install dependencies**
@@ -45,9 +46,9 @@ A modern, AI-powered business name generator that creates creative and professio
    ```bash
    # Copy the example environment file
    cp .env.example .env
-   
-   # Edit .env and add your API key
+     # Edit .env and add your API keys
    GEMINI_API_KEY=your_actual_api_key_here
+   REPLICATE_API_TOKEN=r8_your_replicate_token_here
    ```
 
 4. **Start the development server**
@@ -58,15 +59,26 @@ A modern, AI-powered business name generator that creates creative and professio
 5. **Open your browser**
    Navigate to `http://localhost:3000` and start generating business names!
 
+### Netlify Deployment
+
+1. **Fork this repository** to your GitHub account
+2. **Connect to Netlify**: Go to [Netlify](https://netlify.com) and connect your GitHub repo
+3. **Set Environment Variables** in Netlify Dashboard:
+   - `GEMINI_API_KEY`
+   - `REPLICATE_API_TOKEN`
+   - `NODE_ENV=production`
+4. **Deploy**: Netlify will automatically build and deploy your site
+
 ## 🔧 Configuration
 
 ### Environment Variables
 
-Create a `.env` file in the root directory with the following variables:
+The application supports multiple AI providers. Create a `.env` file with the following variables:
 
 | Variable | Description | Default | Required |
 |----------|-------------|---------|----------|
 | `GEMINI_API_KEY` | Your Google Gemini API key | - | ✅ |
+| `REPLICATE_API_TOKEN` | Your Replicate API token (must start with `r8_`) | - | ❌ |
 | `GEMINI_API_URL` | Gemini API endpoint | `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent` | ❌ |
 | `PORT` | Server port | `3000` | ❌ |
 | `NODE_ENV` | Environment mode | `development` | ❌ |
@@ -76,13 +88,29 @@ Create a `.env` file in the root directory with the following variables:
 
 ### Example .env file
 ```env
+# Required
 GEMINI_API_KEY=your_actual_gemini_api_key_here
+
+# Optional (for enhanced functionality)
+REPLICATE_API_TOKEN=r8_your_replicate_token_here
+
+# Server Configuration
 PORT=3000
 NODE_ENV=development
-ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
-RATE_LIMIT_WINDOW_MS=900000
-RATE_LIMIT_MAX_REQUESTS=100
 ```
+
+### API Key Setup
+
+1. **Google Gemini API**:
+   - Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
+   - Create a new API key
+   - Copy and add to `GEMINI_API_KEY`
+
+2. **Anthropic Claude API** (Optional):
+   - Visit [Anthropic Console](https://console.anthropic.com/)2. **Replicate API** (Optional):
+   - Visit [Replicate Account](https://replicate.com/account/api-tokens)
+   - Create an API token (starts with `r8_`)
+   - Add to `REPLICATE_API_TOKEN`
 
 ## 📁 Project Structure
 
@@ -90,21 +118,43 @@ RATE_LIMIT_MAX_REQUESTS=100
 NameForgeAI/
 ├── 📁 public/                 # Static frontend files
 │   ├── index.html             # Main application page
-│   └── test.html              # Simple test page
-├── 📁 routes/                 # Express.js routes
-│   └── api.js                 # API endpoints and Gemini integration
-├── 📄 server.js               # Express.js server configuration
+│   ├── about.html             # About page
+│   ├── contact.html           # Contact page
+│   ├── privacy-policy.html    # Privacy policy page
+│   └── js/
+│       └── config.js          # Frontend configuration
+├── 📁 netlify/                # Netlify deployment files
+│   └── functions/
+│       └── generate-names.js  # Serverless function for name generation
+├── 📄 netlify.toml            # Netlify deployment configuration
+├── 📄 server.js               # Express.js server (for local development)
 ├── 📄 package.json            # Node.js dependencies and scripts
 ├── 📄 .env.example            # Environment variables template
 ├── 📄 .gitignore              # Git ignore rules
 └── 📄 README.md               # Project documentation
 ```
 
+## 🏗️ Architecture
+
+### Serverless Architecture (Production)
+
+- **Netlify Functions**: Handles API requests serverlessly
+- **Static Site Hosting**: HTML, CSS, and JavaScript served via Netlify CDN
+- **Environment Variables**: Secure API key storage in Netlify
+- **Automatic Deployments**: Git-based deployment pipeline
+
+### Local Development Architecture
+
+- **Express.js Server**: Handles HTTP requests and serves static files during development
+- **API Routes**: RESTful endpoints for name generation
+- **Multi-AI Integration**: Supports Gemini, Anthropic, and Replicate APIs
+- **Security Middleware**: CORS, rate limiting, input validation
+
 ## 🌐 API Documentation
 
 ### Generate Business Names
 
-**Endpoint:** `POST /api/generate-names`
+**Endpoint:** `/.netlify/functions/generate-names` (Production) or `POST /api/generate-names` (Local)
 
 **Request Body:**
 ```json
@@ -127,7 +177,8 @@ NameForgeAI/
       "description": "Simple, memorable name combining eco-friendliness with coffee culture"
     }
   ],
-  "source": "gemini"
+  "source": "gemini",
+  "timestamp": "2025-01-15T10:30:00Z"
 }
 ```
 
@@ -135,9 +186,16 @@ NameForgeAI/
 ```json
 {
   "error": "Validation error",
-  "message": "Business description is required"
+  "message": "Business description is required",
+  "timestamp": "2025-01-15T10:30:00Z"
 }
 ```
+
+### Supported AI Providers
+
+1. **Google Gemini** (Primary): High-quality creative name generation
+2. **Anthropic Claude** (Fallback): Sophisticated reasoning and creativity
+3. **Replicate** (Fallback): Access to various open-source models
 
 ### Validation Rules
 
