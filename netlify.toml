@@ -7,7 +7,7 @@
   external_node_modules = ["replicate"]
 
 [dev]
-  port = 8888
+  port = 3001
 
 [[redirects]]
   from = "/api/*"

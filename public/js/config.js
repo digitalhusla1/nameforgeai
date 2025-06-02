@@ -4,7 +4,7 @@ window.NameForgeConfig = {
     API_BASE_URL: window.location.origin,    // Feature flags
     FEATURES: {
         AI_GENERATION: true,
-        REPLICATE_API: true,
+        DEEPSEEK_API: true,
         COPY_TO_CLIPBOARD: true,
         ADMIN_PANEL: false
     },

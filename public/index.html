@@ -515,10 +515,9 @@
                 const data = await response.json();
                 
                 if (data.success && data.names && data.names.length > 0) {
-                    displayResults(data.names, data.source);
-                      // Show appropriate message based on source
-                    if (data.source === 'replicate-api') {
-                        showNotification('🤖 Names generated with Replicate AI!', 'success');
+                    displayResults(data.names, data.source);                    // Show appropriate message based on source
+                    if (data.source === 'deepseek-v3') {
+                        showNotification('🚀 Names generated with DeepSeek-V3 AI!', 'success');
                     } else {
                         showNotification('✨ Names generated successfully!', 'info');
                     }
@@ -566,8 +565,7 @@
             namesList.innerHTML = '';
               // Add source indicator
             const sourceDiv = document.createElement('div');
-            sourceDiv.style.cssText = 'text-align: center; margin-bottom: 20px; color: #666; font-size: 0.9rem;';
-            sourceDiv.textContent = source === 'replicate-api' ? '🤖 Generated with AI' : 
+            sourceDiv.style.cssText = 'text-align: center; margin-bottom: 20px; color: #666; font-size: 0.9rem;';            sourceDiv.textContent = source === 'deepseek-v3' ? '🚀 Generated with DeepSeek-V3 AI' : 
                                   '🎯 Generated Successfully';
             namesList.appendChild(sourceDiv);
             

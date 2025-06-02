@@ -72,49 +72,54 @@ async function generateBusinessNamesWithReplicate(description, requestId = null,
         const timestamp = Date.now();
         const randomSeed = Math.floor(Math.random() * 100000);
         const microSeed = Math.floor(Math.random() * 1000000);
-        const requestIdentifier = requestId || `replicate-req-${timestamp}-${randomSeed}-${microSeed}`;
-          // Optimized prompt for faster generation
-        const prompt = `Generate exactly 10 business names for: "${description}".
+        const requestIdentifier = requestId || `replicate-req-${timestamp}-${randomSeed}-${microSeed}`;        // Optimized prompt for DeepSeek-V3 model
+        const prompt = `Generate exactly 9 creative business names for: "${description}"
 
-Focus on "${keywordData.primary}" business. Mix of direct and creative names.
+Key focus: "${keywordData.primary}" business
 
-Examples:
-- Direct: Use business type in name
-- Creative: Memorable, brandable names
+Requirements:
+- Mix of creative and professional names
+- Each name should be memorable and brandable
+- Include brief explanation for each
 
-Format:
-1. Name - Brief explanation
-2. Name - Brief explanation
-...continue for 10 names
+Format your response exactly like this:
+1. [Name] - [Brief explanation]
+2. [Name] - [Brief explanation]
+3. [Name] - [Brief explanation]
+... continue for 9 names total
 
-Request: ${requestIdentifier}`;
+Business type: ${keywordData.primary}
+Request ID: ${requestIdentifier}`;
 
-        console.log(`🔄 Calling Replicate API with request ID: ${requestIdentifier}...`);
+        console.log(`🔄 Calling DeepSeek-V3 API with request ID: ${requestIdentifier}...`);
         
         const input = {
-            top_p: 0.8,
             prompt: prompt,
             temperature: 0.7,
-            max_new_tokens: 800,
-            system_prompt: "You are a business naming expert. Generate exactly 10 creative business names with brief explanations. Be concise and follow the format exactly."
-        };        // Use faster model and optimized settings for quicker response
+            max_tokens: 1000,
+            top_p: 0.9
+        };// Use DeepSeek-V3 model for faster generation
         const output = await Promise.race([
-            replicate.run("replicate/llama-2-7b-chat:13c3cdee13ee059ab779f0291d29054dab00a47dad8261375654de5540165fb0", { input }),
+            replicate.run("deepseek-ai/deepseek-v3", { input }),
             new Promise((_, reject) => 
                 setTimeout(() => reject(new Error('API call timed out after 25 seconds')), 25000)
             )
-        ]);
-          console.log('📝 Generated response received from Replicate');
+        ]);        console.log('📝 Generated response received from DeepSeek-V3');
         
-        // Handle array response from Replicate API
+        // Handle response from DeepSeek-V3 API
         let generatedText = '';
         if (Array.isArray(output)) {
             generatedText = output.join('');
         } else if (typeof output === 'string') {
             generatedText = output;
+        } else if (output && output.choices && output.choices[0] && output.choices[0].text) {
+            generatedText = output.choices[0].text;
+        } else if (output && output.text) {
+            generatedText = output.text;
         } else {
-            console.warn('⚠️ Unexpected response format from Replicate API:', typeof output);
-            throw new Error('Invalid response format from Replicate API');
+            console.warn('⚠️ Unexpected response format from DeepSeek-V3 API:', typeof output);
+            console.log('📄 Full output structure:', JSON.stringify(output, null, 2));
+            throw new Error('Invalid response format from DeepSeek-V3 API');
         }
         
         console.log('📄 Processed text length:', generatedText.length);
@@ -127,28 +132,34 @@ Request: ${requestIdentifier}`;
             console.log('📄 Full response text for debugging:', generatedText);
             throw new Error('Failed to parse business names from AI response');
         }
-        
-        console.log(`✅ Successfully generated ${parsedNames.length} names with Replicate API`);
+          console.log(`✅ Successfully generated ${parsedNames.length} names with DeepSeek-V3 API`);
         return parsedNames;
         
     } catch (error) {
-        console.error('❌ Replicate API error:', error.message);
+        console.error('❌ DeepSeek-V3 API error:', error.message);
         throw error;
     }
 }
 
-// Parse Gemini API response
+// Parse DeepSeek API response
 function parseTextResponse(text) {
     const lines = text.split('\n').filter(line => line.trim());
     const names = [];
     
     lines.forEach((line, index) => {
         // Try multiple patterns to match the response format
-        let match = line.match(/^\d+\.\s*([^-]+?)\s*-\s*(.+)$/);
+        // Pattern for DeepSeek format: 1. **Name** - Description
+        let match = line.match(/^\d+\.\s*\*\*([^*]+)\*\*\s*-\s*(.+)$/);
         if (!match) {
+            // Pattern for standard format: 1. Name - Description
+            match = line.match(/^\d+\.\s*([^-]+?)\s*-\s*(.+)$/);
+        }
+        if (!match) {
+            // Pattern for simple format: Name - Description
             match = line.match(/^([A-Z][a-zA-Z\s&]+?)\s*-\s*(.+)$/);
         }
         if (!match) {
+            // Pattern with asterisk: * Name - Description
             match = line.match(/^\*\s*([^-]+?)\s*-\s*(.+)$/);
         }
         
@@ -250,17 +261,15 @@ exports.handler = async (event, context) => {// Handle CORS with maximum anti-ca
             console.log(`✅ Successfully generated ${generatedNames.length} names with Replicate API`);
             return {
                 statusCode: 200,
-                headers,
-                body: JSON.stringify({
+                headers,                body: JSON.stringify({
                     success: true,
                     names: generatedNames,
-                    source: 'replicate-api',
+                    source: 'deepseek-v3',
                     requestId: requestId
                 })
             };
-            
-        } catch (error) {
-            console.error('❌ Replicate API failed:', error.message);
+              } catch (error) {
+            console.error('❌ DeepSeek-V3 API failed:', error.message);
             
             return {
                 statusCode: 503,
