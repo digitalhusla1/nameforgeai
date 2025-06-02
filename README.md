@@ -102,12 +102,10 @@ NODE_ENV=development
 ### API Key Setup
 
 1. **Google Gemini API**:
-   - Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
-   - Create a new API key
+   - Visit [Google AI Studio](https://makersuite.google.com/app/apikey)   - Create a new API key
    - Copy and add to `GEMINI_API_KEY`
 
-2. **Anthropic Claude API** (Optional):
-   - Visit [Anthropic Console](https://console.anthropic.com/)2. **Replicate API** (Optional):
+2. **Replicate API** (Optional):
    - Visit [Replicate Account](https://replicate.com/account/api-tokens)
    - Create an API token (starts with `r8_`)
    - Add to `REPLICATE_API_TOKEN`
@@ -121,13 +119,15 @@ NameForgeAI/
 │   ├── about.html             # About page
 │   ├── contact.html           # Contact page
 │   ├── privacy-policy.html    # Privacy policy page
+│   ├── index-local.html       # Local development version
+│   ├── index-netlify.html     # Netlify-specific version
+│   ├── index-universal.html   # Universal version
 │   └── js/
 │       └── config.js          # Frontend configuration
 ├── 📁 netlify/                # Netlify deployment files
 │   └── functions/
 │       └── generate-names.js  # Serverless function for name generation
 ├── 📄 netlify.toml            # Netlify deployment configuration
-├── 📄 server.js               # Express.js server (for local development)
 ├── 📄 package.json            # Node.js dependencies and scripts
 ├── 📄 .env.example            # Environment variables template
 ├── 📄 .gitignore              # Git ignore rules
@@ -145,10 +145,10 @@ NameForgeAI/
 
 ### Local Development Architecture
 
-- **Express.js Server**: Handles HTTP requests and serves static files during development
-- **API Routes**: RESTful endpoints for name generation
-- **Multi-AI Integration**: Supports Gemini, Anthropic, and Replicate APIs
-- **Security Middleware**: CORS, rate limiting, input validation
+- **Static File Serving**: HTML, CSS, and JavaScript served locally for development
+- **Netlify Functions**: Local simulation of serverless functions
+- **Multi-AI Integration**: Supports Gemini and Replicate APIs
+- **Environment Variables**: Local .env file for API key management
 
 ## 🌐 API Documentation
 
@@ -194,8 +194,7 @@ NameForgeAI/
 ### Supported AI Providers
 
 1. **Google Gemini** (Primary): High-quality creative name generation
-2. **Anthropic Claude** (Fallback): Sophisticated reasoning and creativity
-3. **Replicate** (Fallback): Access to various open-source models
+2. **Replicate** (Fallback): Access to various open-source models
 
 ### Validation Rules
 

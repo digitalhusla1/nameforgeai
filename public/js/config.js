@@ -6,7 +6,8 @@ window.NameForgeConfig = {
     FEATURES: {
         AI_GENERATION: true,
         FALLBACK_GENERATION: true,
-        COPY_TO_CLIPBOARD: true
+        COPY_TO_CLIPBOARD: true,
+        ADMIN_PANEL: false
     },
     
     // UI Configuration
@@ -40,10 +41,13 @@ window.NameForgeConfig = {
         return window.location.hostname === 'localhost' || 
                window.location.hostname === '127.0.0.1';
     },
-    
-    // Get API endpoint
+      // Get API endpoint
     getApiEndpoint: (endpoint) => {
-        return `${window.NameForgeConfig.API_BASE_URL}/api/${endpoint}`;
+        if (window.NameForgeConfig.isDevelopment()) {
+            return `${window.NameForgeConfig.API_BASE_URL}/api/${endpoint}`;
+        } else {
+            return `${window.NameForgeConfig.API_BASE_URL}/.netlify/functions/${endpoint}`;
+        }
     }
 };
 

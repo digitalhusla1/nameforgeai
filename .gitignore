@@ -71,3 +71,18 @@ tmp/
 # Build directories
 build/
 dist/
+
+# Security - Local development files (DO NOT DEPLOY)
+*-local.html
+index-local.html
+
+# Security - Test files (DO NOT DEPLOY)
+test-*.js
+*-test.js
+test.js
+
+# Security - Backup and temporary files
+*.bak
+*.tmp
+.DS_Store
+Thumbs.db
