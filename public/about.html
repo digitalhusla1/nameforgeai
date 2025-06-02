@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - NameForge AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Styles */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }        .nav-menu a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            color: #667eea;
+        }
+
+        .nav-menu a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 1px;
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #333;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 50px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .page-title {
+            color: #333;
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            color: #666;
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+
+        .content-section {
+            margin-bottom: 40px;
+        }
+
+        .content-section h2 {
+            color: #333;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .content-section h3 {
+            color: #333;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            margin-top: 30px;
+        }
+
+        .content-section p {
+            color: #666;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #f8f9ff, #e8edff);
+            padding: 30px 20px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid #e1e1e1;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .team-member {
+            background: linear-gradient(135deg, #f8f9ff, #e8edff);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid #e1e1e1;
+            transition: transform 0.3s ease;
+        }
+
+        .team-member:hover {
+            transform: translateY(-5px);
+        }
+
+        .member-avatar {
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+
+        .member-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .member-role {
+            color: #667eea;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .member-bio {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Footer Styles */
+        .footer {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 40px 0 20px;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .footer-section h3 {
+            color: #333;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .footer-section h4 {
+            color: #333;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+
+        .footer-section p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 8px;
+        }
+
+        .footer-links a {
+            color: #666;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #667eea;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .social-links a {
+            font-size: 1.5rem;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+
+        .social-links a:hover {
+            transform: translateY(-2px);
+        }
+
+        .contact-info p {
+            color: #666;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #e1e1e1;
+            padding-top: 20px;
+            text-align: center;
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        .footer-bottom p {
+            margin: 5px 0;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(10px);
+                flex-direction: column;
+                padding: 20px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .nav-menu.active {
+                display: flex;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .header-container {
+                position: relative;
+            }
+
+            .container {
+                padding: 30px 20px;
+                margin: 20px;
+            }
+
+            .page-title {
+                font-size: 2.5rem;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+
+            .stats-grid, .team-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">NameForge AI</a>
+            <nav>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html" class="active">About Us</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">☰</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <h1 class="page-title">About NameForge AI</h1>
+                <p class="page-subtitle">Revolutionizing business naming with cutting-edge artificial intelligence technology</p>
+            </div>
+
+            <div class="content-section">
+                <h2>🚀 Our Mission</h2>
+                <p>At NameForge AI, we believe that every great business starts with a great name. Our mission is to democratize the naming process by providing entrepreneurs, startups, and established businesses with intelligent, creative, and memorable business names that capture the essence of their brand.</p>
+                <p>We combine advanced artificial intelligence with deep understanding of branding psychology to generate names that don't just sound good – they resonate with your target audience and set the foundation for your brand's success.</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">50K+</div>
+                    <div class="stat-label">Names Generated</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">10K+</div>
+                    <div class="stat-label">Happy Businesses</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">99.9%</div>
+                    <div class="stat-label">Uptime</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">AI Support</div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>🧠 How It Works</h2>
+                <h3>Advanced AI Technology</h3>
+                <p>Our proprietary AI engine analyzes millions of successful business names, market trends, and linguistic patterns to understand what makes a name memorable, brandable, and market-ready.</p>
+                
+                <h3>Intelligent Processing</h3>
+                <p>When you describe your business, our AI doesn't just match keywords – it understands context, industry nuances, target demographics, and brand personality to generate names that truly fit your vision.</p>
+                
+                <h3>Quality Assurance</h3>
+                <p>Every generated name goes through multiple validation layers including domain availability checks, trademark screening, and market appropriateness analysis.</p>
+            </div>
+
+            <div class="content-section">
+                <h2>👥 Our Team</h2>
+                <div class="team-grid">
+                    <div class="team-member">
+                        <div class="member-avatar">👨‍💼</div>
+                        <div class="member-name">Alex Rodriguez</div>
+                        <div class="member-role">CEO & Founder</div>
+                        <div class="member-bio">Serial entrepreneur with 15+ years in branding and AI. Previously built 3 successful startups.</div>
+                    </div>
+                    <div class="team-member">
+                        <div class="member-avatar">👩‍💻</div>
+                        <div class="member-name">Dr. Sarah Chen</div>
+                        <div class="member-role">Chief AI Officer</div>
+                        <div class="member-bio">PhD in Machine Learning from Stanford. Expert in NLP and computational linguistics.</div>
+                    </div>
+                    <div class="team-member">
+                        <div class="member-avatar">👨‍🎨</div>
+                        <div class="member-name">Marcus Thompson</div>
+                        <div class="member-role">Head of Design</div>
+                        <div class="member-bio">Award-winning designer with expertise in brand identity and user experience design.</div>
+                    </div>
+                    <div class="team-member">
+                        <div class="member-avatar">👩‍🔬</div>
+                        <div class="member-name">Emma Johnson</div>
+                        <div class="member-role">Data Scientist</div>
+                        <div class="member-bio">Specializes in market analysis and naming trend prediction using big data analytics.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>🎯 Why Choose NameForge AI</h2>
+                <h3>Instant Results</h3>
+                <p>Get 10 unique, professionally crafted business names in seconds, not weeks of brainstorming.</p>
+                
+                <h3>Market-Tested</h3>
+                <p>Our AI is trained on successful brands across all industries, ensuring your names have proven market appeal.</p>
+                
+                <h3>Brandable Names</h3>
+                <p>Every name is designed to be memorable, pronounceable, and perfect for building a strong brand identity.</p>
+                
+                <h3>Completely Free</h3>
+                <p>Access our full naming engine at no cost. We believe great names should be accessible to everyone.</p>
+            </div>
+
+            <div class="content-section">
+                <h2>🌟 Our Vision</h2>
+                <p>We envision a world where every entrepreneur has access to world-class branding resources from day one. By removing the barriers to great naming, we're helping to level the playing field and empower the next generation of business leaders.</p>
+                <p>Our technology continues to evolve, learning from every interaction to provide increasingly sophisticated and contextually aware naming solutions. We're not just generating names – we're helping build the brands of tomorrow.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>NameForge AI</h3>
+                    <p>The premier AI-powered business name generator. Create unique, memorable, and brandable names for your business in seconds.</p>
+                    <div class="social-links">
+                        <a href="#" title="Twitter">🐦</a>
+                        <a href="#" title="LinkedIn">💼</a>
+                        <a href="#" title="Facebook">📘</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul class="footer-links">
+                        <li><a href="contact.html">Help Center</a></li>
+                        <li><a href="contact.html">Contact Support</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="admin.html" onclick="return confirm('Admin panel requires authentication. Continue?')">System Admin</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <div class="contact-info">
+                        <p>📧 support@nameforge-ai.com</p>
+                        <p>📞 +1 (555) 123-4567</p>
+                        <p>🏢 San Francisco, CA</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 NameForge AI. All rights reserved.</p>
+                <p>Powered by Advanced AI Technology</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu functionality
+        document.getElementById('mobileMenuToggle').addEventListener('click', function() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const navMenu = document.getElementById('navMenu');
+            const mobileToggle = document.getElementById('mobileMenuToggle');
+            
+            if (!navMenu.contains(event.target) && !mobileToggle.contains(event.target)) {
+                navMenu.classList.remove('active');
+            }
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', function() {
+                document.getElementById('navMenu').classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>

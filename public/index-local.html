@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NameForge AI - Business Name Generator</title>
+    <title>NameForge AI - Business Name Generator (Local)</title>
     <style>
         * {
             margin: 0;
@@ -249,6 +249,19 @@
             display: none;
         }
 
+        /* Environment indicator */
+        .env-indicator {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: #4CAF50;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            z-index: 1001;
+        }
+
         /* Footer Styles */
         .footer {
             background: rgba(255, 255, 255, 0.95);
@@ -383,13 +396,16 @@
     </style>
 </head>
 <body>
+    <!-- Environment Indicator -->
+    <div class="env-indicator">🖥️ LOCAL SERVER</div>
+
     <!-- Header -->
     <header class="header">
         <div class="header-container">
-            <a href="index.html" class="logo">NameForge AI</a>
+            <a href="index-local.html" class="logo">NameForge AI</a>
             <nav>
                 <ul class="nav-menu" id="navMenu">
-                    <li><a href="index.html" class="active">Home</a></li>
+                    <li><a href="index-local.html" class="active">Home</a></li>
                     <li><a href="about.html">About Us</a></li>
                     <li><a href="contact.html">Contact Us</a></li>
                 </ul>
@@ -441,7 +457,7 @@
                 <div class="footer-section">
                     <h3>Quick Links</h3>
                     <ul class="footer-links">
-                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index-local.html">Home</a></li>
                         <li><a href="about.html">About Us</a></li>
                         <li><a href="contact.html">Contact Us</a></li>
                         <li><a href="privacy-policy.html">Privacy Policy</a></li>
@@ -459,78 +475,60 @@
             <div class="footer-bottom">
                 <p class="copyright">© 2025 NameForge AI. All rights reserved.</p>
                 <div class="footer-admin">
-                    <a href="admin.html">System Administration</a>
+                    <a href="admin-local.html">System Administration</a>
                 </div>
             </div>
         </div>
-    </footer>    <div class="copy-tooltip" id="copyTooltip">Copied to clipboard!</div>
+    </footer>
 
-    <!-- Configuration Script -->
-    <script src="js/config.js"></script>    <script>
-        // Use configuration from config.js
-        const config = window.NameForgeConfig;
+    <div class="copy-tooltip" id="copyTooltip">Copied to clipboard!</div>
+
+    <script>
+        // LOCAL SERVER API Configuration
+        const API_ENDPOINT = 'http://localhost:3000/api/generate-names';
 
         async function generateBusinessNames() {
             const description = document.getElementById('businessDescription').value.trim();
             
-            // Validation using config
             if (!description) {
-                alert(config.MESSAGES.VALIDATION.REQUIRED);
-                return;
-            }
-
-            if (description.length < config.UI.MIN_DESCRIPTION_LENGTH) {
-                alert(config.MESSAGES.VALIDATION.TOO_SHORT);
-                return;
-            }
-
-            if (description.length > config.UI.MAX_DESCRIPTION_LENGTH) {
-                alert(config.MESSAGES.VALIDATION.TOO_LONG);
+                alert('Please enter a business description first!');
                 return;
             }
 
             showLoading(true);
             
             try {
-                const response = await fetch(config.getApiEndpoint('generate-names'), {
+                const response = await fetch(API_ENDPOINT, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Cache-Control': 'no-cache, no-store, must-revalidate',
-                        'Pragma': 'no-cache',
-                        'Expires': '0'
+                        'Cache-Control': 'no-cache'
                     },
                     body: JSON.stringify({ description })
                 });
 
                 if (!response.ok) {
                     const errorData = await response.json();
-                    throw new Error(errorData.message || config.MESSAGES.API.SERVER_ERROR);
+                    throw new Error(errorData.message || 'API request failed');
                 }
 
                 const data = await response.json();
                 
                 if (data.success && data.names && data.names.length > 0) {
-                    displayResults(data.names, data.source);
-                    
-                    // Show appropriate message based on source
-                    if (data.source === 'gemini-ai') {
-                        showNotification('🤖 Names generated with AI!', 'success');
-                    } else if (data.source === 'fallback-generator') {
-                        showNotification('✨ Names generated with smart fallback!', 'info');
-                    }
+                    displayResults(data.names);
+                    showNotification('Names generated successfully! (Local Server)', 'success');
                 } else {
-                    throw new Error(data.message || config.MESSAGES.API.GENERATION_FAILED);
+                    throw new Error(data.message || 'No names generated');
                 }
                 
             } catch (error) {
                 console.error('Error:', error);
                 
-                let errorMessage = config.MESSAGES.API.GENERATION_FAILED;
-                if (error.message.includes('Network') || error.message.includes('fetch')) {
-                    errorMessage = config.MESSAGES.API.NETWORK_ERROR;
-                } else if (error.message) {
-                    errorMessage = error.message;
+                let errorMessage = '';
+                if (error.message.includes('Failed to fetch')) {
+                    errorMessage = '🌐 Could not connect to local server. Make sure the server is running on http://localhost:3000';
+                } else {
+                    errorMessage = '⚠️ Sorry, there was an error generating names. Please try again.';
                 }
                 
                 alert(errorMessage);
@@ -556,19 +554,11 @@
             }
         }
 
-        function displayResults(names, source) {
+        function displayResults(names) {
             const results = document.getElementById('results');
             const namesList = document.getElementById('namesList');
             
             namesList.innerHTML = '';
-            
-            // Add source indicator
-            const sourceDiv = document.createElement('div');
-            sourceDiv.style.cssText = 'text-align: center; margin-bottom: 20px; color: #666; font-size: 0.9rem;';
-            sourceDiv.textContent = source === 'gemini-ai' ? '🤖 Generated with Google Gemini AI' : 
-                                  source === 'fallback-generator' ? '✨ Generated with Smart Algorithm' : 
-                                  '🎯 Generated Successfully';
-            namesList.appendChild(sourceDiv);
             
             names.forEach((name, index) => {
                 const nameItem = document.createElement('div');
@@ -595,14 +585,6 @@
                 showCopyTooltip();
             }).catch(err => {
                 console.error('Failed to copy text: ', err);
-                // Fallback for older browsers
-                const textArea = document.createElement('textarea');
-                textArea.value = text;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-                showCopyTooltip();
             });
         }
 
@@ -622,39 +604,19 @@
                 top: 20px;
                 right: 20px;
                 padding: 15px 20px;
-                background: ${type === 'success' ? '#4CAF50' : type === 'info' ? '#2196F3' : '#FF9800'};
+                background: ${type === 'success' ? '#4CAF50' : '#2196F3'};
                 color: white;
                 border-radius: 8px;
                 z-index: 1000;
                 box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-                animation: slideIn 0.3s ease;
             `;
             notification.textContent = message;
             document.body.appendChild(notification);
             
             setTimeout(() => {
-                notification.style.animation = 'slideOut 0.3s ease';
-                setTimeout(() => {
-                    if (document.body.contains(notification)) {
-                        document.body.removeChild(notification);
-                    }
-                }, 300);
+                document.body.removeChild(notification);
             }, 3000);
         }
-
-        // Add CSS for notification animations
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-            @keyframes slideOut {
-                from { transform: translateX(0); opacity: 1; }
-                to { transform: translateX(100%); opacity: 0; }
-            }
-        `;
-        document.head.appendChild(style);
 
         // Mobile menu toggle
         document.getElementById('mobileMenuToggle').addEventListener('click', function() {

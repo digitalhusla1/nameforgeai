@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - NameForge AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Styles */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }        .nav-menu a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            color: #667eea;
+        }
+
+        .nav-menu a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 1px;
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #333;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 50px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .page-title {
+            color: #333;
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            color: #666;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .last-updated {
+            background: linear-gradient(135deg, #f8f9ff, #e8edff);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #e1e1e1;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .last-updated strong {
+            color: #667eea;
+        }
+
+        .privacy-section {
+            margin-bottom: 40px;
+        }
+
+        .privacy-section h2 {
+            color: #333;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e1e1e1;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .privacy-section h3 {
+            color: #333;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            margin-top: 25px;
+        }
+
+        .privacy-section p {
+            color: #666;
+            font-size: 1rem;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .privacy-section ul {
+            color: #666;
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        .privacy-section li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 25px 0;
+        }
+
+        .highlight-box h4 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+
+        .highlight-box p {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+        }
+
+        .contact-section {
+            background: linear-gradient(135deg, #f8f9ff, #e8edff);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid #e1e1e1;
+            margin-top: 40px;
+        }
+
+        .contact-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .contact-section a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .contact-section a:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer Styles */
+        .footer {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 40px 0 20px;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .footer-section h3 {
+            color: #333;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .footer-section h4 {
+            color: #333;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+
+        .footer-section p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 8px;
+        }
+
+        .footer-links a {
+            color: #666;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #667eea;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .social-links a {
+            font-size: 1.5rem;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+
+        .social-links a:hover {
+            transform: translateY(-2px);
+        }
+
+        .footer-contact-info p {
+            color: #666;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #e1e1e1;
+            padding-top: 20px;
+            text-align: center;
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        .footer-bottom p {
+            margin: 5px 0;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(10px);
+                flex-direction: column;
+                padding: 20px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .nav-menu.active {
+                display: flex;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .header-container {
+                position: relative;
+            }
+
+            .container {
+                padding: 30px 20px;
+                margin: 20px;
+            }
+
+            .page-title {
+                font-size: 2.5rem;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">NameForge AI</a>
+            <nav>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">☰</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <h1 class="page-title">Privacy Policy</h1>
+                <p class="page-subtitle">Your privacy is important to us. This policy explains how we collect, use, and protect your information.</p>
+            </div>
+
+            <div class="last-updated">
+                <p><strong>Last Updated:</strong> June 1, 2025</p>
+            </div>
+
+            <div class="privacy-section">
+                <h2>🛡️ Overview</h2>
+                <p>NameForge AI is committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our business name generation service.</p>
+                
+                <div class="highlight-box">
+                    <h4>Quick Summary</h4>
+                    <p>We collect minimal data necessary to provide our service, never sell your information, and use industry-standard security measures to protect your data. You maintain full control over your information at all times.</p>
+                </div>
+            </div>
+
+            <div class="privacy-section">
+                <h2>📊 Information We Collect</h2>
+                
+                <h3>Information You Provide</h3>
+                <ul>
+                    <li><strong>Business Descriptions:</strong> Text you enter to generate business names</li>
+                    <li><strong>Contact Information:</strong> Email address, name, and company details (when you contact us)</li>
+                    <li><strong>Feedback:</strong> Comments, suggestions, and survey responses</li>
+                </ul>
+
+                <h3>Information Automatically Collected</h3>
+                <ul>
+                    <li><strong>Usage Data:</strong> How you interact with our service, pages visited, features used</li>
+                    <li><strong>Technical Data:</strong> IP address, browser type, device information, operating system</li>
+                    <li><strong>Performance Data:</strong> Response times, error rates, and service availability metrics</li>
+                </ul>
+
+                <h3>Cookies and Tracking</h3>
+                <ul>
+                    <li><strong>Essential Cookies:</strong> Required for basic functionality and security</li>
+                    <li><strong>Analytics Cookies:</strong> Help us understand usage patterns and improve our service</li>
+                    <li><strong>Preference Cookies:</strong> Remember your settings and preferences</li>
+                </ul>
+            </div>
+
+            <div class="privacy-section">
+                <h2>🔄 How We Use Your Information</h2>
+                
+                <h3>Service Provision</h3>
+                <ul>
+                    <li>Generate personalized business names based on your descriptions</li>
+                    <li>Improve our AI algorithms and name generation quality</li>
+                    <li>Provide customer support and respond to your inquiries</li>
+                    <li>Ensure service security and prevent abuse</li>
+                </ul>
+
+                <h3>Service Improvement</h3>
+                <ul>
+                    <li>Analyze usage patterns to enhance user experience</li>
+                    <li>Develop new features and functionalities</li>
+                    <li>Monitor and improve service performance</li>
+                    <li>Conduct research and development activities</li>
+                </ul>
+
+                <h3>Communication</h3>
+                <ul>
+                    <li>Send service updates and important notifications</li>
+                    <li>Respond to your questions and support requests</li>
+                    <li>Share relevant tips and best practices (with your consent)</li>
+                </ul>
+            </div>
+
+            <div class="privacy-section">
+                <h2>🤝 Information Sharing</h2>
+                
+                <p>We do not sell, trade, or rent your personal information to third parties. We may share your information only in the following limited circumstances:</p>
+                
+                <h3>Service Providers</h3>
+                <ul>
+                    <li>Cloud hosting providers (for secure data storage)</li>
+                    <li>Analytics services (for usage insights)</li>
+                    <li>Customer support platforms (for help desk services)</li>
+                </ul>
+
+                <h3>Legal Requirements</h3>
+                <ul>
+                    <li>When required by law or legal process</li>
+                    <li>To protect our rights and property</li>
+                    <li>To ensure user safety and service security</li>
+                    <li>In connection with business transfers or mergers</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <h4>Third-Party AI Services</h4>
+                    <p>We use Google's Gemini AI for name generation. Your business descriptions are processed by this service to generate names, but no personal information is shared, and data is not stored by the AI provider.</p>
+                </div>
+            </div>
+
+            <div class="privacy-section">
+                <h2>🔒 Data Security</h2>
+                
+                <h3>Security Measures</h3>
+                <ul>
+                    <li><strong>Encryption:</strong> All data transmission uses SSL/TLS encryption</li>
+                    <li><strong>Access Control:</strong> Strict access controls and authentication requirements</li>
+                    <li><strong>Monitoring:</strong> Continuous monitoring for security threats and vulnerabilities</li>
+                    <li><strong>Regular Audits:</strong> Periodic security assessments and updates</li>
+                </ul>
+
+                <h3>Data Storage</h3>
+                <ul>
+                    <li>Data stored in secure, encrypted cloud environments</li>
+                    <li>Regular backups to prevent data loss</li>
+                    <li>Geographic restrictions to comply with data protection laws</li>
+                    <li>Automatic deletion of temporary processing data</li>
+                </ul>
+            </div>
+
+            <div class="privacy-section">
+                <h2>⏱️ Data Retention</h2>
+                
+                <ul>
+                    <li><strong>Business Descriptions:</strong> Temporarily processed and not permanently stored</li>
+                    <li><strong>Usage Analytics:</strong> Retained for 24 months for service improvement</li>
+                    <li><strong>Contact Information:</strong> Kept while you use our service and for 2 years after</li>
+                    <li><strong>Support Records:</strong> Maintained for 3 years for quality assurance</li>
+                </ul>
+
+                <p>You can request deletion of your data at any time by contacting us.</p>
+            </div>
+
+            <div class="privacy-section">
+                <h2>👤 Your Rights</h2>
+                
+                <h3>Access and Control</h3>
+                <ul>
+                    <li><strong>Access:</strong> Request a copy of the personal data we hold about you</li>
+                    <li><strong>Correction:</strong> Update or correct any inaccurate information</li>
+                    <li><strong>Deletion:</strong> Request deletion of your personal data</li>
+                    <li><strong>Portability:</strong> Receive your data in a machine-readable format</li>
+                </ul>
+
+                <h3>Opt-Out Options</h3>
+                <ul>
+                    <li>Disable cookies through your browser settings</li>
+                    <li>Unsubscribe from marketing communications</li>
+                    <li>Request to stop processing your data for specific purposes</li>
+                    <li>Object to automated decision-making processes</li>
+                </ul>
+            </div>
+
+            <div class="privacy-section">
+                <h2>🌍 International Transfers</h2>
+                
+                <p>NameForge AI operates globally. Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place for such transfers, including:</p>
+                
+                <ul>
+                    <li>Compliance with international data protection standards</li>
+                    <li>Use of standard contractual clauses approved by regulatory authorities</li>
+                    <li>Ensuring adequate levels of protection in destination countries</li>
+                    <li>Regular monitoring of cross-border data transfer practices</li>
+                </ul>
+            </div>
+
+            <div class="privacy-section">
+                <h2>👶 Children's Privacy</h2>
+                
+                <p>NameForge AI is not intended for children under 13 years of age. We do not knowingly collect personal information from children under 13. If we become aware that a child under 13 has provided us with personal information, we will take steps to delete such information promptly.</p>
+                
+                <p>Parents or guardians who believe their child has provided personal information to us should contact us immediately.</p>
+            </div>
+
+            <div class="privacy-section">
+                <h2>🔄 Policy Updates</h2>
+                
+                <p>We may update this Privacy Policy from time to time to reflect changes in our practices or for legal reasons. When we make significant changes, we will:</p>
+                
+                <ul>
+                    <li>Post the updated policy on our website</li>
+                    <li>Update the "Last Updated" date</li>
+                    <li>Notify users via email for material changes</li>
+                    <li>Provide a summary of key changes</li>
+                </ul>
+
+                <p>Your continued use of our service after any changes constitutes acceptance of the updated policy.</p>
+            </div>
+
+            <div class="contact-section">
+                <h3>📞 Contact Us About Privacy</h3>
+                <p>If you have any questions about this Privacy Policy or our data practices, please contact us:</p>
+                <p><strong>Email:</strong> <a href="mailto:privacy@nameforge-ai.com">privacy@nameforge-ai.com</a></p>
+                <p><strong>Address:</strong> NameForge AI Privacy Officer<br>
+                123 Innovation Drive<br>
+                San Francisco, CA 94105<br>
+                United States</p>
+                <p><strong>Phone:</strong> <a href="tel:+15551234567">+1 (555) 123-4567</a></p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>NameForge AI</h3>
+                    <p>The premier AI-powered business name generator. Create unique, memorable, and brandable names for your business in seconds.</p>
+                    <div class="social-links">
+                        <a href="#" title="Twitter">🐦</a>
+                        <a href="#" title="LinkedIn">💼</a>
+                        <a href="#" title="Facebook">📘</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                        <li><a href="privacy-policy.html">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul class="footer-links">
+                        <li><a href="contact.html">Help Center</a></li>
+                        <li><a href="contact.html">Contact Support</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="admin.html" onclick="return confirm('Admin panel requires authentication. Continue?')">System Admin</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <div class="footer-contact-info">
+                        <p>📧 support@nameforge-ai.com</p>
+                        <p>📞 +1 (555) 123-4567</p>
+                        <p>🏢 San Francisco, CA</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 NameForge AI. All rights reserved.</p>
+                <p>Powered by Advanced AI Technology</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu functionality
+        document.getElementById('mobileMenuToggle').addEventListener('click', function() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const navMenu = document.getElementById('navMenu');
+            const mobileToggle = document.getElementById('mobileMenuToggle');
+            
+            if (!navMenu.contains(event.target) && !mobileToggle.contains(event.target)) {
+                navMenu.classList.remove('active');
+            }
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', function() {
+                document.getElementById('navMenu').classList.remove('active');
+            });
+        });
+    </script>
+</body>
+</html>

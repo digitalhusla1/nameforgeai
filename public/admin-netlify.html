@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NameForge AI - Admin Panel (Netlify)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Environment Badge */
+        .env-badge {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(241, 147, 251, 0.3);
+            z-index: 1001;
+        }
+
+        .admin-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            min-height: 600px;
+        }
+
+        .admin-header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 20px;
+        }
+
+        .admin-header h1 {
+            color: #333;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .admin-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .auth-section {
+            display: block;
+        }
+
+        .auth-section.hidden {
+            display: none;
+        }
+
+        .config-section {
+            display: none;
+        }
+
+        .config-section.show {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            margin-left: 10px;
+        }
+
+        .btn-test {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            margin-left: 10px;
+        }
+
+        .api-config-section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 15px;
+            border: 2px solid #f0f0f0;
+        }
+
+        .api-config-section h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .api-config-section .status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status.configured {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status.not-configured {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status.testing {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .api-description {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-btn:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        @media (max-width: 768px) {
+            .admin-container {
+                margin: 20px;
+                padding: 30px 20px;
+            }
+
+            .admin-header h1 {
+                font-size: 2rem;
+            }
+
+            .back-btn {
+                position: relative;
+                top: auto;
+                left: auto;
+                margin-bottom: 20px;
+                display: inline-block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Environment Badge -->
+    <div class="env-badge">
+        🌐 NETLIFY
+    </div>
+
+    <a href="index-netlify.html" class="back-btn">← Back to App</a>
+
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1>Admin Panel</h1>
+            <p>Configure API settings for NameForge AI (Netlify Environment)</p>
+        </div>
+
+        <!-- Authentication Section -->
+        <div class="auth-section" id="authSection">
+            <div class="form-group">
+                <label for="adminCode">Admin Access Code</label>
+                <input type="password" id="adminCode" placeholder="Enter admin access code">
+            </div>
+            <button class="btn" onclick="authenticate()">Access Admin Panel</button>
+        </div>
+
+        <!-- Configuration Section -->
+        <div class="config-section" id="configSection">
+            <!-- Google Gemini API Configuration -->
+            <div class="api-config-section">
+                <h3>
+                    🤖 Google Gemini API
+                    <span class="status not-configured" id="geminiStatus">Not Configured</span>
+                </h3>
+                <p class="api-description">
+                    Google's Gemini AI provides advanced natural language processing for creative business name generation.
+                </p>
+                <div class="form-group">
+                    <label for="geminiApiKey">Gemini API Key</label>
+                    <input type="password" id="geminiApiKey" placeholder="Enter your Google Gemini API key">
+                </div>
+                <button class="btn" onclick="saveGeminiConfig()">Save Configuration</button>
+                <button class="btn btn-test" onclick="testGeminiAPI()">Test API</button>
+            </div>
+
+            <!-- Anthropic Claude API Configuration -->
+            <div class="api-config-section">
+                <h3>
+                    🧠 Anthropic Claude API
+                    <span class="status not-configured" id="anthropicStatus">Not Configured</span>
+                </h3>
+                <p class="api-description">
+                    Anthropic's Claude AI offers sophisticated reasoning and creative text generation for business naming.
+                </p>
+                <div class="form-group">
+                    <label for="anthropicApiKey">Claude API Key</label>
+                    <input type="password" id="anthropicApiKey" placeholder="Enter your Anthropic Claude API key">
+                </div>
+                <button class="btn" onclick="saveAnthropicConfig()">Save Configuration</button>
+                <button class="btn btn-test" onclick="testAnthropicAPI()">Test API</button>
+            </div>
+
+            <!-- Replicate API Configuration -->
+            <div class="api-config-section">
+                <h3>
+                    🔄 Replicate API
+                    <span class="status not-configured" id="replicateStatus">Not Configured</span>
+                </h3>
+                <p class="api-description">
+                    Replicate provides access to various AI models for diverse and creative business name suggestions.
+                </p>
+                <div class="form-group">
+                    <label for="replicateApiKey">Replicate API Key</label>
+                    <input type="password" id="replicateApiKey" placeholder="Enter your Replicate API key">
+                </div>
+                <button class="btn" onclick="saveReplicateConfig()">Save Configuration</button>
+                <button class="btn btn-test" onclick="testReplicateAPI()">Test API</button>
+            </div>
+        </div>
+
+        <!-- Messages -->
+        <div class="message" id="messageDiv"></div>
+    </div>
+
+    <script>
+        // Netlify configuration
+        const API_CONFIG = {
+            endpoint: '/.netlify/functions/admin-panel',
+            testEndpoint: '/.netlify/functions/test-api',
+            environment: 'netlify'
+        };
+
+        // Message functions
+        function showMessage(text, type = 'info') {
+            const messageDiv = document.getElementById('messageDiv');
+            messageDiv.textContent = text;
+            messageDiv.className = `message show ${type}`;
+            setTimeout(() => {
+                messageDiv.classList.remove('show');
+            }, 5000);
+        }
+
+        // Authentication function
+        async function authenticate() {
+            const code = document.getElementById('adminCode').value;
+            
+            if (!code) {
+                showMessage('Please enter the admin access code.', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(API_CONFIG.endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ code: code })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('authSection').classList.add('hidden');
+                    document.getElementById('configSection').classList.add('show');
+                    showMessage('Authentication successful! Welcome to the admin panel.', 'success');
+                    loadExistingConfigs();
+                } else {
+                    showMessage(data.message || 'Invalid admin code.', 'error');
+                }
+            } catch (error) {
+                console.error('Authentication error:', error);
+                showMessage('Authentication failed. Please check your connection.', 'error');
+            }
+        }
+
+        // Load existing configurations
+        function loadExistingConfigs() {
+            // Load from localStorage
+            const geminiKey = localStorage.getItem('gemini_api_key');
+            const anthropicKey = localStorage.getItem('anthropic_api_key');
+            const replicateKey = localStorage.getItem('replicate_api_key');
+
+            if (geminiKey) {
+                document.getElementById('geminiApiKey').value = geminiKey;
+                updateStatus('geminiStatus', 'configured');
+            }
+            if (anthropicKey) {
+                document.getElementById('anthropicApiKey').value = anthropicKey;
+                updateStatus('anthropicStatus', 'configured');
+            }
+            if (replicateKey) {
+                document.getElementById('replicateApiKey').value = replicateKey;
+                updateStatus('replicateStatus', 'configured');
+            }
+        }
+
+        // Update status indicators
+        function updateStatus(statusId, status) {
+            const statusElement = document.getElementById(statusId);
+            statusElement.className = `status ${status}`;
+            
+            switch(status) {
+                case 'configured':
+                    statusElement.textContent = 'Configured';
+                    break;
+                case 'not-configured':
+                    statusElement.textContent = 'Not Configured';
+                    break;
+                case 'testing':
+                    statusElement.textContent = 'Testing...';
+                    break;
+                default:
+                    statusElement.textContent = 'Unknown';
+            }
+        }
+
+        // Save Gemini configuration
+        function saveGeminiConfig() {
+            const apiKey = document.getElementById('geminiApiKey').value;
+            
+            if (!apiKey) {
+                showMessage('Please enter a Gemini API key.', 'error');
+                return;
+            }
+
+            try {
+                localStorage.setItem('gemini_api_key', apiKey);
+                updateStatus('geminiStatus', 'configured');
+                showMessage('Gemini API configuration saved successfully!', 'success');
+            } catch (error) {
+                showMessage('Failed to save Gemini configuration.', 'error');
+            }
+        }
+
+        // Save Anthropic configuration
+        function saveAnthropicConfig() {
+            const apiKey = document.getElementById('anthropicApiKey').value;
+            
+            if (!apiKey) {
+                showMessage('Please enter an Anthropic API key.', 'error');
+                return;
+            }
+
+            try {
+                localStorage.setItem('anthropic_api_key', apiKey);
+                updateStatus('anthropicStatus', 'configured');
+                showMessage('Anthropic API configuration saved successfully!', 'success');
+            } catch (error) {
+                showMessage('Failed to save Anthropic configuration.', 'error');
+            }
+        }
+
+        // Save Replicate configuration
+        function saveReplicateConfig() {
+            const apiKey = document.getElementById('replicateApiKey').value;
+            
+            if (!apiKey) {
+                showMessage('Please enter a Replicate API key.', 'error');
+                return;
+            }
+
+            try {
+                localStorage.setItem('replicate_api_key', apiKey);
+                updateStatus('replicateStatus', 'configured');
+                showMessage('Replicate API configuration saved successfully!', 'success');
+            } catch (error) {
+                showMessage('Failed to save Replicate configuration.', 'error');
+            }
+        }
+
+        // Test API functions (for Netlify environment)
+        async function testGeminiAPI() {
+            const apiKey = document.getElementById('geminiApiKey').value || localStorage.getItem('gemini_api_key');
+            
+            if (!apiKey) {
+                showMessage('Please enter and save a Gemini API key first.', 'error');
+                return;
+            }
+
+            updateStatus('geminiStatus', 'testing');
+            
+            try {
+                const response = await fetch(API_CONFIG.testEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        service: 'gemini',
+                        apiKey: apiKey
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    updateStatus('geminiStatus', 'configured');
+                    showMessage('Gemini API test successful! ✅', 'success');
+                } else {
+                    updateStatus('geminiStatus', 'not-configured');
+                    showMessage(`Gemini API test failed: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                updateStatus('geminiStatus', 'not-configured');
+                showMessage('Gemini API test failed: Network error', 'error');
+            }
+        }
+
+        async function testAnthropicAPI() {
+            const apiKey = document.getElementById('anthropicApiKey').value || localStorage.getItem('anthropic_api_key');
+            
+            if (!apiKey) {
+                showMessage('Please enter and save an Anthropic API key first.', 'error');
+                return;
+            }
+
+            updateStatus('anthropicStatus', 'testing');
+            
+            try {
+                const response = await fetch(API_CONFIG.testEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        service: 'anthropic',
+                        apiKey: apiKey
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    updateStatus('anthropicStatus', 'configured');
+                    showMessage('Anthropic API test successful! ✅', 'success');
+                } else {
+                    updateStatus('anthropicStatus', 'not-configured');
+                    showMessage(`Anthropic API test failed: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                updateStatus('anthropicStatus', 'not-configured');
+                showMessage('Anthropic API test failed: Network error', 'error');
+            }
+        }
+
+        async function testReplicateAPI() {
+            const apiKey = document.getElementById('replicateApiKey').value || localStorage.getItem('replicate_api_key');
+            
+            if (!apiKey) {
+                showMessage('Please enter and save a Replicate API key first.', 'error');
+                return;
+            }
+
+            updateStatus('replicateStatus', 'testing');
+            
+            try {
+                const response = await fetch(API_CONFIG.testEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        service: 'replicate',
+                        apiKey: apiKey
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    updateStatus('replicateStatus', 'configured');
+                    showMessage('Replicate API test successful! ✅', 'success');
+                } else {
+                    updateStatus('replicateStatus', 'not-configured');
+                    showMessage(`Replicate API test failed: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                updateStatus('replicateStatus', 'not-configured');
+                showMessage('Replicate API test failed: Network error', 'error');
+            }
+        }
+
+        // Enter key handling for authentication
+        document.getElementById('adminCode').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                authenticate();
+            }
+        });
+
+        // Console log for environment
+        console.log(`Admin Panel running in ${API_CONFIG.environment} mode`);
+        console.log(`API endpoint: ${API_CONFIG.endpoint}`);
+    </script>
+</body>
+</html>

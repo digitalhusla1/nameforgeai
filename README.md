@@ -76,7 +76,7 @@ Create a `.env` file in the root directory with the following variables:
 
 ### Example .env file
 ```env
-GEMINI_API_KEY=AIzaSyBxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+GEMINI_API_KEY=your_actual_gemini_api_key_here
 PORT=3000
 NODE_ENV=development
 ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
